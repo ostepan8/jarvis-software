@@ -4,6 +4,8 @@ import {
   addMessage,
   showTypingIndicator,
   hideTypingIndicator,
+  loadChatHistory,
+  saveChatHistory,
 } from "../components/ChatManager.js";
 import {
   initThreeJS,
@@ -123,6 +125,7 @@ let commandHistory = [];
 let historyIndex = -1;
 let currentColorTheme = "classic";
 let currentScene = "hologram";
+const SETTINGS_KEY = 'jarvis_settings';
 
 // Clear any conflicting localStorage on startup
 function clearConflictingStorage() {
@@ -149,6 +152,38 @@ function clearConflictingStorage() {
 
 function setupDOM() {
   document.getElementById("app").innerHTML = template;
+}
+
+function saveSettings() {
+  try {
+    const data = {
+      colorTheme: currentColorTheme,
+      scene: currentScene,
+      timestamp: Date.now(),
+    };
+    localStorage.setItem(SETTINGS_KEY, JSON.stringify(data));
+  } catch (err) {
+    console.error('Failed to save settings', err);
+  }
+}
+
+function loadSettings() {
+  try {
+    const saved = localStorage.getItem(SETTINGS_KEY);
+    if (!saved) return false;
+    const data = JSON.parse(saved);
+    currentColorTheme = data.colorTheme || currentColorTheme;
+    currentScene = data.scene || currentScene;
+    return true;
+  } catch (err) {
+    console.error('Failed to load settings', err);
+  }
+  return false;
+}
+
+function applyLoadedSettings() {
+  selectColorTheme(currentColorTheme);
+  selectScene(currentScene);
 }
 
 function selectColorTheme(theme) {
@@ -184,6 +219,8 @@ function selectColorTheme(theme) {
     colorDropdown.classList.remove("active");
   }
 
+  saveSettings();
+
   console.log("Color theme applied:", theme);
 }
 
@@ -216,6 +253,8 @@ function selectScene(sceneName) {
   if (sceneDropdown) {
     sceneDropdown.classList.remove("active");
   }
+
+  saveSettings();
 
   console.log("Scene selection completed for:", sceneName);
 }
@@ -415,15 +454,15 @@ function bindUI() {
 function initialize() {
   console.log("initialize called");
 
-  // Clear any conflicting localStorage first
-  clearConflictingStorage();
-
   setupDOM();
+  loadSettings();
 
   // Small delay to ensure DOM is ready
   setTimeout(() => {
     bindUI();
     initThreeJS();
+    applyLoadedSettings();
+    const historyLoaded = loadChatHistory();
 
     // Focus input
     const userInput = document.getElementById("userInput");
@@ -431,18 +470,27 @@ function initialize() {
       userInput.focus();
     }
 
-    // Welcome message
     setTimeout(() => {
-      addMessage(
-        "Good evening, sir. All systems operational. How may I assist you today?",
-        "assistant",
-        "CORE"
-      );
-    }, 1500);
+      if (!historyLoaded) {
+        addMessage(
+          "Advanced holographic interface initialized. All systems online. How may I assist you today?",
+          "assistant",
+          "CORE"
+        );
+      } else {
+        addMessage(
+          "Session restored. Welcome back, sir. All systems operational.",
+          "assistant",
+          "CORE"
+        );
+      }
+    }, 1000);
   }, 100);
 
   window.addEventListener("beforeunload", () => {
     cleanupThreeJS();
+    saveSettings();
+    saveChatHistory();
   });
 
   console.log("initialize completed");

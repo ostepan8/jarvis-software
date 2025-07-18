@@ -1,5 +1,5 @@
-// extracted from original renderer.js
-// TODO: replace with persistent chat history
+// extracted from original renderer.js with persistence enhancements
+const CHAT_HISTORY_KEY = 'jarvis_chat_history';
 const messages = [];
 let typingIndicator = null;
 
@@ -13,6 +13,7 @@ function addMessage(content, type = "assistant", system = "CORE") {
   messages.push(message);
   renderMessage(message);
   scrollToBottom();
+  saveChatHistory();
 }
 
 function renderMessage(message) {
@@ -89,10 +90,40 @@ function clearMessages() {
   messagesContainer.innerHTML = "";
 }
 
+function saveChatHistory() {
+  try {
+    const data = { messages: messages.slice(-50), timestamp: Date.now() };
+    localStorage.setItem(CHAT_HISTORY_KEY, JSON.stringify(data));
+  } catch (err) {
+    console.error('Failed to save chat history', err);
+  }
+}
+
+function loadChatHistory() {
+  try {
+    const saved = localStorage.getItem(CHAT_HISTORY_KEY);
+    if (!saved) return false;
+    const data = JSON.parse(saved);
+    if (data.messages && Array.isArray(data.messages)) {
+      data.messages.forEach((m) => {
+        messages.push(m);
+        renderMessage(m);
+      });
+      scrollToBottom();
+      return true;
+    }
+  } catch (err) {
+    console.error('Failed to load chat history', err);
+  }
+  return false;
+}
+
 export {
   addMessage,
   showTypingIndicator,
   hideTypingIndicator,
   clearMessages,
   scrollToBottom,
+  loadChatHistory,
+  saveChatHistory,
 };
