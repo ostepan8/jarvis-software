@@ -1,0 +1,183 @@
+
+        /* JARVIS Orb Profile Picture */
+        .jarvis-orb {
+            position: relative;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .orb-core {
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            background: radial-gradient(circle at 30% 30%, var(--primary-color), var(--secondary-color), var(--accent-color));
+            border-radius: 50%;
+            box-shadow: 
+                0 0 8px var(--primary-color),
+                0 0 16px var(--secondary-color),
+                0 0 24px var(--accent-color),
+                inset 0 0 8px rgba(255, 255, 255, 0.3);
+            animation: coreGlow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes coreGlow {
+            0% { 
+                transform: scale(1);
+                box-shadow: 
+                    0 0 8px var(--primary-color),
+                    0 0 16px var(--secondary-color),
+                    0 0 24px var(--accent-color),
+                    inset 0 0 8px rgba(255, 255, 255, 0.3);
+            }
+            100% { 
+                transform: scale(1.1);
+                box-shadow: 
+                    0 0 12px var(--primary-color),
+                    0 0 24px var(--secondary-color),
+                    0 0 36px var(--accent-color),
+                    inset 0 0 12px rgba(255, 255, 255, 0.5);
+            }
+        }
+
+        .orb-ring {
+            position: absolute;
+            border-radius: 50%;
+            border: 1px solid var(--primary-color);
+            animation: ringRotate 8s linear infinite;
+            opacity: 0.6;
+        }
+
+        .ring-1 {
+            width: 24px;
+            height: 24px;
+            border-color: var(--primary-color);
+            animation: ringRotate 4s linear infinite;
+            opacity: 0.8;
+        }
+
+        .ring-2 {
+            width: 28px;
+            height: 28px;
+            border-color: var(--secondary-color);
+            animation: ringRotate 6s linear infinite reverse;
+            opacity: 0.6;
+        }
+
+        .ring-3 {
+            width: 32px;
+            height: 32px;
+            border-color: var(--accent-color);
+            animation: ringRotate 8s linear infinite;
+            opacity: 0.4;
+        }
+
+        @keyframes ringRotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .orb-particles {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            box-shadow: 0 0 4px var(--primary-color);
+            opacity: 0.8;
+        }
+
+        .particle:nth-child(1) {
+            top: 2px;
+            left: 19px;
+            animation: particleOrbit 3s linear infinite;
+        }
+
+        .particle:nth-child(2) {
+            top: 10px;
+            right: 2px;
+            animation: particleOrbit 3s linear infinite 0.5s;
+        }
+
+        .particle:nth-child(3) {
+            bottom: 2px;
+            left: 19px;
+            animation: particleOrbit 3s linear infinite 1s;
+        }
+
+        .particle:nth-child(4) {
+            top: 10px;
+            left: 2px;
+            animation: particleOrbit 3s linear infinite 1.5s;
+        }
+
+        .particle:nth-child(5) {
+            top: 5px;
+            right: 8px;
+            animation: particleOrbit 4s linear infinite 2s;
+        }
+
+        .particle:nth-child(6) {
+            bottom: 5px;
+            left: 8px;
+            animation: particleOrbit 4s linear infinite 2.5s;
+        }
+
+        @keyframes particleOrbit {
+            0% { 
+                transform: rotate(0deg) translateX(18px) rotate(0deg);
+                opacity: 1;
+            }
+            50% { 
+                opacity: 0.5;
+            }
+            100% { 
+                transform: rotate(360deg) translateX(18px) rotate(-360deg);
+                opacity: 1;
+            }
+        }
+
+        /* Processing state */
+        .processing .jarvis-orb .orb-core {
+            animation: processingCore 0.5s ease-in-out infinite alternate;
+        }
+
+        .processing .jarvis-orb .orb-ring {
+            animation-duration: 1s;
+            border-color: var(--accent-color);
+            opacity: 0.8;
+        }
+
+        .processing .jarvis-orb .particle {
+            background: var(--accent-color);
+            box-shadow: 0 0 6px var(--accent-color);
+        }
+
+        @keyframes processingCore {
+            0% { 
+                background: radial-gradient(circle at 30% 30%, var(--accent-color), var(--primary-color), var(--secondary-color));
+            }
+            100% { 
+                background: radial-gradient(circle at 30% 30%, var(--primary-color), var(--accent-color), var(--secondary-color));
+            }
+        }
+
+        /* Three.js Container */
+        .threejs-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -2;
+            opacity: 0.8;
+        }

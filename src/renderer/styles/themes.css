@@ -1,0 +1,63 @@
+        :root {
+            --primary-color: #00d4ff;
+            --secondary-color: #00ff88;
+            --accent-color: #ffaa00;
+            --bg-primary: rgba(0, 10, 30, 0.95);
+            --bg-secondary: rgba(0, 25, 50, 0.9);
+            --bg-tertiary: rgba(0, 15, 35, 0.95);
+        }
+
+        /* Color Themes */
+        .theme-classic {
+            --primary-color: #00d4ff;
+            --secondary-color: #00ff88;
+            --accent-color: #ffaa00;
+            --bg-primary: rgba(0, 10, 30, 0.95);
+            --bg-secondary: rgba(0, 25, 50, 0.9);
+            --bg-tertiary: rgba(0, 15, 35, 0.95);
+        }
+
+        .theme-matrix {
+            --primary-color: #00ff41;
+            --secondary-color: #41ff00;
+            --accent-color: #88ff00;
+            --bg-primary: rgba(0, 20, 0, 0.95);
+            --bg-secondary: rgba(0, 40, 0, 0.9);
+            --bg-tertiary: rgba(0, 25, 0, 0.95);
+        }
+
+        .theme-neon {
+            --primary-color: #ff00ff;
+            --secondary-color: #00ffff;
+            --accent-color: #ff0088;
+            --bg-primary: rgba(20, 0, 20, 0.95);
+            --bg-secondary: rgba(40, 0, 40, 0.9);
+            --bg-tertiary: rgba(25, 0, 25, 0.95);
+        }
+
+        .theme-fire {
+            --primary-color: #ff6600;
+            --secondary-color: #ffaa00;
+            --accent-color: #ff4400;
+            --bg-primary: rgba(30, 10, 0, 0.95);
+            --bg-secondary: rgba(50, 15, 0, 0.9);
+            --bg-tertiary: rgba(35, 5, 0, 0.95);
+        }
+
+        .theme-ocean {
+            --primary-color: #0099ff;
+            --secondary-color: #00ccff;
+            --accent-color: #0066cc;
+            --bg-primary: rgba(0, 15, 30, 0.95);
+            --bg-secondary: rgba(0, 25, 50, 0.9);
+            --bg-tertiary: rgba(0, 20, 40, 0.95);
+        }
+
+        .theme-purple {
+            --primary-color: #9900ff;
+            --secondary-color: #cc00ff;
+            --accent-color: #6600cc;
+            --bg-primary: rgba(15, 0, 30, 0.95);
+            --bg-secondary: rgba(25, 0, 50, 0.9);
+            --bg-tertiary: rgba(20, 0, 40, 0.95);
+        }
