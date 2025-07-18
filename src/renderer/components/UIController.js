@@ -1,7 +1,7 @@
 // extracted from original index.html and renderer.js
 // NOTE: handles DOM creation and events
 import { addMessage, showTypingIndicator, hideTypingIndicator } from '../components/ChatManager.js';
-import { initThreeJS, cleanupThreeJS, triggerProcessingEffect } from '../three/scene.js';
+import { initThreeJS, cleanupThreeJS, triggerProcessingEffect, setScene } from '../three/scene.js';
 import { getMockAgentResponse, processUserInput } from '../utils/helpers.js';
 
 // HTML template injected into #app
@@ -133,6 +133,42 @@ function getElements() {
   };
 }
 
+function applyColorPreference(color, elements) {
+  if (!color) return;
+  elements.colorOptions.forEach(o => {
+    if (o.dataset.color === color) {
+      o.classList.add('active');
+    } else {
+      o.classList.remove('active');
+    }
+  });
+  elements.jarvisContainer.classList.forEach(cls => {
+    if (cls.startsWith('theme-')) {
+      elements.jarvisContainer.classList.remove(cls);
+    }
+  });
+  elements.jarvisContainer.classList.add(`theme-${color}`);
+}
+
+function applyScenePreference(scene, elements) {
+  if (!scene) return;
+  elements.sceneOptions.forEach(o => {
+    if (o.dataset.scene === scene) {
+      o.classList.add('active');
+    } else {
+      o.classList.remove('active');
+    }
+  });
+  setScene(scene);
+}
+
+function loadPreferences(elements) {
+  const savedColor = localStorage.getItem('jarvis-color');
+  const savedScene = localStorage.getItem('jarvis-scene');
+  applyColorPreference(savedColor, elements);
+  applyScenePreference(savedScene, elements);
+}
+
 async function handleUserInput(elements) {
   const input = elements.userInput.value.trim();
   if (!input || isProcessing) return;
@@ -207,25 +243,18 @@ function bindUI() {
 
   elements.colorOptions.forEach(option => {
     option.addEventListener('click', () => {
-      elements.colorOptions.forEach(o => o.classList.remove('active'));
-      option.classList.add('active');
       const color = option.dataset.color;
-      elements.jarvisContainer.classList.forEach(cls => {
-        if (cls.startsWith('theme-')) {
-          elements.jarvisContainer.classList.remove(cls);
-        }
-      });
-      elements.jarvisContainer.classList.add(`theme-${color}`);
+      applyColorPreference(color, elements);
+      localStorage.setItem('jarvis-color', color);
       elements.colorDropdown.classList.remove('active');
     });
   });
 
   elements.sceneOptions.forEach(option => {
     option.addEventListener('click', () => {
-      elements.sceneOptions.forEach(o => o.classList.remove('active'));
-      option.classList.add('active');
       const scene = option.dataset.scene;
-      window.setScene(scene);
+      applyScenePreference(scene, elements);
+      localStorage.setItem('jarvis-scene', scene);
       elements.sceneDropdown.classList.remove('active');
     });
   });
@@ -240,6 +269,8 @@ function initialize() {
   setupDOM();
   bindUI();
   initThreeJS();
+  const elements = getElements();
+  loadPreferences(elements);
   document.getElementById('userInput').focus();
   // Welcome message
   setTimeout(() => {
