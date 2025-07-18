@@ -107,88 +107,6 @@
             transition: all 0.3s ease;
         }
 
-        /* Compact mode - default state */
-        .jarvis-container.compact {
-            width: 120px;
-            height: 120px;
-            padding: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            background: radial-gradient(circle, 
-                var(--bg-primary) 0%, 
-                var(--bg-secondary) 50%, 
-                var(--bg-tertiary) 100%);
-        }
-
-        .jarvis-container.compact .header,
-        .jarvis-container.compact .chat-container,
-        .jarvis-container.compact .input-area,
-        .jarvis-container.compact .background-grid,
-        .jarvis-container.compact .scan-line {
-            display: none;
-        }
-
-        .jarvis-container.compact .jarvis-orb {
-            transform: scale(2);
-        }
-
-        /* Expanded mode - hover state */
-        .jarvis-container.expanded {
-            width: 400px;
-            height: 300px;
-            border-radius: 8px;
-            background: linear-gradient(135deg, 
-                var(--bg-primary) 0%, 
-                var(--bg-secondary) 50%, 
-                var(--bg-tertiary) 100%);
-            animation: expandContainer 0.4s ease-out;
-        }
-
-        @keyframes expandContainer {
-            0% {
-                width: 120px;
-                height: 120px;
-                border-radius: 50%;
-            }
-            100% {
-                width: 400px;
-                height: 300px;
-                border-radius: 8px;
-            }
-        }
-
-        .jarvis-container.expanded .header,
-        .jarvis-container.expanded .chat-container,
-        .jarvis-container.expanded .input-area,
-        .jarvis-container.expanded .background-grid,
-        .jarvis-container.expanded .scan-line {
-            display: flex;
-            animation: fadeInElements 0.3s ease-out 0.2s both;
-        }
-
-        .jarvis-container.expanded .background-grid,
-        .jarvis-container.expanded .scan-line {
-            display: block;
-        }
-
-        .jarvis-container.expanded .jarvis-orb {
-            transform: scale(1);
-        }
-
-        @keyframes fadeInElements {
-            0% {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-            100% {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* Header */
         .header {
             display: flex;
             justify-content: space-between;
@@ -342,6 +260,238 @@
         .option-preview.fire { background: linear-gradient(45deg, #ff4400, #ffaa00); }
         .option-preview.ocean { background: linear-gradient(45deg, #001133, #0099ff); }
         .option-preview.purple { background: linear-gradient(45deg, #330066, #9900ff); }
+
+        /* 3D Scene Previews */
+        .option-preview.hologram {
+            background: radial-gradient(circle at 50% 50%, #003366 0%, #000 70%);
+        }
+        .option-preview.hologram::before {
+            content: '';
+            position: absolute;
+            top: 6px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 12px;
+            height: 12px;
+            border: 2px solid #00ffff;
+            border-radius: 50%;
+            background: transparent;
+            animation: hologramSpin 2s linear infinite;
+        }
+        .option-preview.hologram::after {
+            content: '';
+            position: absolute;
+            bottom: 2px;
+            left: 2px;
+            right: 2px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #00ffff, transparent);
+        }
+
+        .option-preview.datacenter {
+            background: linear-gradient(180deg, #001122 0%, #000 100%);
+        }
+        .option-preview.datacenter::before {
+            content: '';
+            position: absolute;
+            top: 4px;
+            left: 4px;
+            width: 3px;
+            height: 16px;
+            background: repeating-linear-gradient(
+                0deg,
+                #333 0px,
+                #333 2px,
+                #666 2px,
+                #666 4px
+            );
+            box-shadow: 
+                6px 0 0 #333,
+                12px 0 0 #333,
+                18px 0 0 #333,
+                24px 0 0 #333,
+                30px 0 0 #333;
+        }
+        .option-preview.datacenter::after {
+            content: '';
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            width: 24px;
+            height: 1px;
+            background: #00ffff;
+            box-shadow: 0 4px 0 #00ffff, 0 8px 0 #00ffff;
+            animation: dataFlow 1.5s ease-in-out infinite;
+        }
+
+        .option-preview.crystal {
+            background: radial-gradient(circle at 30% 30%, #4a0080 0%, #000 70%);
+        }
+        .option-preview.crystal::before {
+            content: '';
+            position: absolute;
+            top: 4px;
+            left: 8px;
+            width: 8px;
+            height: 8px;
+            background: #aa88ff;
+            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+            transform: rotate(45deg);
+            animation: crystalGlow 2s ease-in-out infinite alternate;
+        }
+        .option-preview.crystal::after {
+            content: '';
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: 6px;
+            height: 6px;
+            background: #ccaaff;
+            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+            transform: rotate(-30deg);
+            animation: crystalGlow 2s ease-in-out infinite alternate 0.5s;
+        }
+
+        .option-preview.neural {
+            background: radial-gradient(circle at 50% 50%, #331100 0%, #000 70%);
+        }
+        .option-preview.neural::before {
+            content: '';
+            position: absolute;
+            top: 6px;
+            left: 6px;
+            width: 3px;
+            height: 3px;
+            background: #ff6600;
+            border-radius: 50%;
+            box-shadow: 
+                8px 0 0 #ff6600,
+                16px 0 0 #ff6600,
+                24px 0 0 #ff6600,
+                4px 6px 0 #ff6600,
+                12px 6px 0 #ff6600,
+                20px 6px 0 #ff6600;
+            animation: neuralPulse 1.5s ease-in-out infinite;
+        }
+        .option-preview.neural::after {
+            content: '';
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            width: 24px;
+            height: 1px;
+            background: linear-gradient(90deg, #ff6600, transparent, #ff6600);
+            transform: rotate(15deg);
+            animation: neuralConnect 2s ease-in-out infinite;
+        }
+
+        .option-preview.quantum {
+            background: radial-gradient(circle at 50% 50%, #220044 0%, #000 70%);
+        }
+        .option-preview.quantum::before {
+            content: '';
+            position: absolute;
+            top: 8px;
+            left: 12px;
+            width: 6px;
+            height: 6px;
+            background: #aa00ff;
+            border-radius: 50%;
+            opacity: 0.8;
+            animation: quantumPhase 2s ease-in-out infinite;
+        }
+        .option-preview.quantum::after {
+            content: '';
+            position: absolute;
+            top: 8px;
+            right: 12px;
+            width: 6px;
+            height: 6px;
+            background: #ff00aa;
+            border-radius: 50%;
+            opacity: 0.8;
+            animation: quantumPhase 2s ease-in-out infinite 1s;
+        }
+
+        .option-preview.galaxy {
+            background: radial-gradient(ellipse at 50% 50%, #001133 0%, #000 70%);
+        }
+        .option-preview.galaxy::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 20px;
+            height: 20px;
+            border: 2px solid #6666ff;
+            border-radius: 50%;
+            background: transparent;
+            border-top-color: transparent;
+            border-right-color: transparent;
+            animation: galaxySpin 3s linear infinite;
+        }
+        .option-preview.galaxy::after {
+            content: '';
+            position: absolute;
+            top: 4px;
+            left: 4px;
+            width: 1px;
+            height: 1px;
+            background: #fff;
+            border-radius: 50%;
+            box-shadow: 
+                8px 2px 0 #fff,
+                16px 4px 0 #fff,
+                24px 6px 0 #fff,
+                32px 8px 0 #fff,
+                6px 12px 0 #fff,
+                14px 14px 0 #fff,
+                22px 16px 0 #fff,
+                30px 18px 0 #fff;
+            animation: starTwinkle 2s ease-in-out infinite;
+        }
+
+        /* Preview Animations */
+        @keyframes hologramSpin {
+            0% { transform: translateX(-50%) rotate(0deg); }
+            100% { transform: translateX(-50%) rotate(360deg); }
+        }
+
+        @keyframes dataFlow {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+
+        @keyframes crystalGlow {
+            0% { opacity: 0.6; transform: rotate(45deg) scale(1); }
+            100% { opacity: 1; transform: rotate(45deg) scale(1.2); }
+        }
+
+        @keyframes neuralPulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        @keyframes neuralConnect {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.8; }
+        }
+
+        @keyframes quantumPhase {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.3); }
+        }
+
+        @keyframes galaxySpin {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        @keyframes starTwinkle {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
 
         .option-name {
             font-size: 10px;
@@ -586,55 +736,43 @@
         /* JARVIS Orb Profile Picture */
         .jarvis-orb {
             position: relative;
-            width: 48px;
-            height: 48px;
+            width: 32px;
+            height: 32px;
             display: flex;
             align-items: center;
             justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .jarvis-container.compact .jarvis-orb {
-            width: 64px;
-            height: 64px;
         }
 
         .orb-core {
             position: absolute;
-            width: 20px;
-            height: 20px;
+            width: 16px;
+            height: 16px;
             background: radial-gradient(circle at 30% 30%, var(--primary-color), var(--secondary-color), var(--accent-color));
             border-radius: 50%;
             box-shadow: 
-                0 0 12px var(--primary-color),
-                0 0 24px var(--secondary-color),
-                0 0 36px var(--accent-color),
-                inset 0 0 12px rgba(255, 255, 255, 0.3);
+                0 0 8px var(--primary-color),
+                0 0 16px var(--secondary-color),
+                0 0 24px var(--accent-color),
+                inset 0 0 8px rgba(255, 255, 255, 0.3);
             animation: coreGlow 2s ease-in-out infinite alternate;
-        }
-
-        .jarvis-container.compact .orb-core {
-            width: 28px;
-            height: 28px;
         }
 
         @keyframes coreGlow {
             0% { 
                 transform: scale(1);
                 box-shadow: 
-                    0 0 12px var(--primary-color),
-                    0 0 24px var(--secondary-color),
-                    0 0 36px var(--accent-color),
-                    inset 0 0 12px rgba(255, 255, 255, 0.3);
+                    0 0 8px var(--primary-color),
+                    0 0 16px var(--secondary-color),
+                    0 0 24px var(--accent-color),
+                    inset 0 0 8px rgba(255, 255, 255, 0.3);
             }
             100% { 
                 transform: scale(1.1);
                 box-shadow: 
-                    0 0 18px var(--primary-color),
-                    0 0 36px var(--secondary-color),
-                    0 0 54px var(--accent-color),
-                    inset 0 0 18px rgba(255, 255, 255, 0.5);
+                    0 0 12px var(--primary-color),
+                    0 0 24px var(--secondary-color),
+                    0 0 36px var(--accent-color),
+                    inset 0 0 12px rgba(255, 255, 255, 0.5);
             }
         }
 
@@ -647,42 +785,27 @@
         }
 
         .ring-1 {
-            width: 32px;
-            height: 32px;
+            width: 24px;
+            height: 24px;
             border-color: var(--primary-color);
             animation: ringRotate 4s linear infinite;
             opacity: 0.8;
         }
 
         .ring-2 {
-            width: 40px;
-            height: 40px;
+            width: 28px;
+            height: 28px;
             border-color: var(--secondary-color);
             animation: ringRotate 6s linear infinite reverse;
             opacity: 0.6;
         }
 
         .ring-3 {
-            width: 48px;
-            height: 48px;
+            width: 32px;
+            height: 32px;
             border-color: var(--accent-color);
             animation: ringRotate 8s linear infinite;
             opacity: 0.4;
-        }
-
-        .jarvis-container.compact .ring-1 {
-            width: 44px;
-            height: 44px;
-        }
-
-        .jarvis-container.compact .ring-2 {
-            width: 56px;
-            height: 56px;
-        }
-
-        .jarvis-container.compact .ring-3 {
-            width: 64px;
-            height: 64px;
         }
 
         @keyframes ringRotate {
@@ -692,13 +815,8 @@
 
         .orb-particles {
             position: absolute;
-            width: 60px;
-            height: 60px;
-        }
-
-        .jarvis-container.compact .orb-particles {
-            width: 80px;
-            height: 80px;
+            width: 40px;
+            height: 40px;
         }
 
         .particle {
@@ -713,50 +831,50 @@
 
         .particle:nth-child(1) {
             top: 2px;
-            left: 29px;
+            left: 19px;
             animation: particleOrbit 3s linear infinite;
         }
 
         .particle:nth-child(2) {
-            top: 15px;
+            top: 10px;
             right: 2px;
             animation: particleOrbit 3s linear infinite 0.5s;
         }
 
         .particle:nth-child(3) {
             bottom: 2px;
-            left: 29px;
+            left: 19px;
             animation: particleOrbit 3s linear infinite 1s;
         }
 
         .particle:nth-child(4) {
-            top: 15px;
+            top: 10px;
             left: 2px;
             animation: particleOrbit 3s linear infinite 1.5s;
         }
 
         .particle:nth-child(5) {
-            top: 8px;
-            right: 12px;
+            top: 5px;
+            right: 8px;
             animation: particleOrbit 4s linear infinite 2s;
         }
 
         .particle:nth-child(6) {
-            bottom: 8px;
-            left: 12px;
+            bottom: 5px;
+            left: 8px;
             animation: particleOrbit 4s linear infinite 2.5s;
         }
 
         @keyframes particleOrbit {
             0% { 
-                transform: rotate(0deg) translateX(28px) rotate(0deg);
+                transform: rotate(0deg) translateX(18px) rotate(0deg);
                 opacity: 1;
             }
             50% { 
                 opacity: 0.5;
             }
             100% { 
-                transform: rotate(360deg) translateX(28px) rotate(-360deg);
+                transform: rotate(360deg) translateX(18px) rotate(-360deg);
                 opacity: 1;
             }
         }
@@ -803,40 +921,6 @@
             height: 100% !important;
         }
 
-        /* Hover effects */
-        .jarvis-orb:hover {
-            transform: scale(1.05);
-        }
-
-        .jarvis-container.compact .jarvis-orb:hover {
-            transform: scale(2.1);
-        }
-
-        /* Tooltip for compact mode */
-        .hover-tooltip {
-            position: absolute;
-            bottom: -40px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: var(--bg-primary);
-            color: var(--primary-color);
-            padding: 8px 12px;
-            border-radius: 4px;
-            font-size: 10px;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            pointer-events: none;
-            border: 1px solid var(--primary-color);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-            z-index: 100;
-        }
-
-        .jarvis-container.compact .jarvis-orb:hover .hover-tooltip {
-            opacity: 1;
-        }
-
         /* Notification */
         .demo-notification {
             position: absolute;
@@ -866,8 +950,8 @@
     </style>
 </head>
 <body>
-    <div class="jarvis-container theme-classic compact">
-        <!-- Header with controls (hidden in compact mode) -->
+    <div class="jarvis-container theme-classic">
+        <!-- Header with controls -->
         <div class="header">
             <div class="status-indicator">
                 <div class="jarvis-orb">
@@ -916,6 +1000,35 @@
                         </div>
                     </div>
                 </div>
+                <div class="selector">
+                    <button class="selector-btn" id="sceneToggle">3D</button>
+                    <div class="selector-dropdown" id="sceneDropdown">
+                        <div class="selector-option active" data-scene="hologram">
+                            <div class="option-preview hologram"></div>
+                            <span class="option-name">Hologram</span>
+                        </div>
+                        <div class="selector-option" data-scene="datacenter">
+                            <div class="option-preview datacenter"></div>
+                            <span class="option-name">Data Center</span>
+                        </div>
+                        <div class="selector-option" data-scene="crystal">
+                            <div class="option-preview crystal"></div>
+                            <span class="option-name">Crystal</span>
+                        </div>
+                        <div class="selector-option" data-scene="neural">
+                            <div class="option-preview neural"></div>
+                            <span class="option-name">Neural</span>
+                        </div>
+                        <div class="selector-option" data-scene="quantum">
+                            <div class="option-preview quantum"></div>
+                            <span class="option-name">Quantum</span>
+                        </div>
+                        <div class="selector-option" data-scene="galaxy">
+                            <div class="option-preview galaxy"></div>
+                            <span class="option-name">Galaxy</span>
+                        </div>
+                    </div>
+                </div>
                 <button id="minimizeBtn" class="control-btn" title="Minimize">
                     <span class="icon">−</span>
                 </button>
@@ -925,14 +1038,14 @@
             </div>
         </div>
 
-        <!-- Chat Messages Area (hidden in compact mode) -->
+        <!-- Chat Messages Area -->
         <div class="chat-container">
             <div id="messagesContainer" class="messages-container">
                 <!-- Messages will be populated here -->
             </div>
         </div>
 
-        <!-- Input area (hidden in compact mode) -->
+        <!-- Input area -->
         <div class="input-area">
             <div class="input-container">
                 <span class="input-prompt">></span>
@@ -950,23 +1063,6 @@
             </div>
         </div>
 
-        <!-- Compact mode - just the orb -->
-        <div class="jarvis-orb" id="mainOrb">
-            <div class="orb-core"></div>
-            <div class="orb-ring ring-1"></div>
-            <div class="orb-ring ring-2"></div>
-            <div class="orb-ring ring-3"></div>
-            <div class="orb-particles">
-                <div class="particle"></div>
-                <div class="particle"></div>
-                <div class="particle"></div>
-                <div class="particle"></div>
-                <div class="particle"></div>
-                <div class="particle"></div>
-            </div>
-            <div class="hover-tooltip">Hover to expand JARVIS</div>
-        </div>
-
         <!-- Three.js 3D Background -->
         <div id="threejsContainer" class="threejs-container"></div>
 
@@ -979,18 +1075,19 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     
     <script>
-        // JARVIS Desktop Assistant - Compact UI with Hover Expansion
+        // JARVIS Desktop Assistant - Enhanced 3D Scenes + Color Themes
         
         // DOM Elements
         const messagesContainer = document.getElementById("messagesContainer");
         const userInput = document.getElementById("userInput");
         const sendBtn = document.getElementById("sendBtn");
         const jarvisContainer = document.querySelector(".jarvis-container");
-        const mainOrb = document.getElementById("mainOrb");
         const minimizeBtn = document.getElementById("minimizeBtn");
         const closeBtn = document.getElementById("closeBtn");
         const colorToggle = document.getElementById("colorToggle");
         const colorDropdown = document.getElementById("colorDropdown");
+        const sceneToggle = document.getElementById("sceneToggle");
+        const sceneDropdown = document.getElementById("sceneDropdown");
 
         // Application State
         let isProcessing = false;
@@ -999,54 +1096,175 @@
         let messages = [];
         let typingIndicator = null;
         let currentColorTheme = 'classic';
-        let isExpanded = false;
-        let expandTimeout = null;
+        let currentScene = 'hologram';
+
+        // Settings persistence
+        const SETTINGS_KEY = 'jarvis_settings';
+        const CHAT_HISTORY_KEY = 'jarvis_chat_history';
+
+        // =============================================================================
+        // SETTINGS PERSISTENCE
+        // =============================================================================
+
+        function saveSettings() {
+            const settings = {
+                colorTheme: currentColorTheme,
+                scene: currentScene,
+                timestamp: Date.now()
+            };
+            
+            try {
+                localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
+                console.log('Settings saved:', settings);
+            } catch (error) {
+                console.error('Failed to save settings:', error);
+            }
+        }
+
+        function loadSettings() {
+            try {
+                const savedSettings = localStorage.getItem(SETTINGS_KEY);
+                if (savedSettings) {
+                    const settings = JSON.parse(savedSettings);
+                    currentColorTheme = settings.colorTheme || 'classic';
+                    currentScene = settings.scene || 'hologram';
+                    console.log('Settings loaded:', settings);
+                    return true;
+                }
+            } catch (error) {
+                console.error('Failed to load settings:', error);
+            }
+            return false;
+        }
+
+        function saveChatHistory() {
+            try {
+                const historyData = {
+                    messages: messages.slice(-50), // Keep last 50 messages
+                    timestamp: Date.now()
+                };
+                localStorage.setItem(CHAT_HISTORY_KEY, JSON.stringify(historyData));
+                console.log('Chat history saved:', historyData.messages.length, 'messages');
+            } catch (error) {
+                console.error('Failed to save chat history:', error);
+            }
+        }
+
+        function loadChatHistory() {
+            try {
+                const savedHistory = localStorage.getItem(CHAT_HISTORY_KEY);
+                if (savedHistory) {
+                    const historyData = JSON.parse(savedHistory);
+                    if (historyData.messages && historyData.messages.length > 0) {
+                        messages = historyData.messages;
+                        messages.forEach(msg => renderMessage(msg));
+                        scrollToBottom();
+                        console.log('Chat history loaded:', messages.length, 'messages');
+                        return true;
+                    }
+                }
+            } catch (error) {
+                console.error('Failed to load chat history:', error);
+            }
+            return false;
+        }
+
+        function clearStoredData() {
+            try {
+                localStorage.removeItem(SETTINGS_KEY);
+                localStorage.removeItem(CHAT_HISTORY_KEY);
+                showNotification('All stored data cleared');
+                console.log('All stored data cleared');
+            } catch (error) {
+                console.error('Failed to clear stored data:', error);
+            }
+        }
+
+        function exportSettings() {
+            const settings = {
+                colorTheme: currentColorTheme,
+                scene: currentScene,
+                messages: messages.slice(-50),
+                exportDate: new Date().toISOString()
+            };
+            
+            const dataStr = JSON.stringify(settings, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(dataBlob);
+            
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `jarvis_settings_${new Date().toISOString().split('T')[0]}.json`;
+            link.click();
+            
+            URL.revokeObjectURL(url);
+            showNotification('Settings exported successfully');
+        }
 
         // Three.js variables
         let scene, camera, renderer, particles, sceneObjects = [];
         let animationId;
 
         // =============================================================================
-        // COMPACT/EXPANDED MODE CONTROL
+        // 3D SCENE CONFIGURATIONS
         // =============================================================================
 
-        function expandInterface() {
-            if (isExpanded) return;
-            
-            // Clear any existing timeout
-            if (expandTimeout) {
-                clearTimeout(expandTimeout);
+        const sceneConfigurations = {
+            hologram: {
+                name: 'Holographic Interface',
+                particleCount: 150,
+                objects: [
+                    { type: 'torus', position: [2, 0, -2], size: [1, 0.3, 8, 16] },
+                    { type: 'cube', count: 3, size: 0.2 },
+                    { type: 'grid', position: [0, -3, 0], size: [10, 10, 20, 20] }
+                ]
+            },
+            datacenter: {
+                name: 'Data Center',
+                particleCount: 200,
+                objects: [
+                    { type: 'server-rack', count: 8 },
+                    { type: 'data-flow', count: 12 },
+                    { type: 'floor-grid', position: [0, -3, 0], size: [20, 20, 40, 40] }
+                ]
+            },
+            crystal: {
+                name: 'Crystal Formation',
+                particleCount: 180,
+                objects: [
+                    { type: 'crystal-cluster', count: 6 },
+                    { type: 'crystal-shard', count: 12 },
+                    { type: 'energy-field', position: [0, 0, 0], size: 4 }
+                ]
+            },
+            neural: {
+                name: 'Neural Network',
+                particleCount: 250,
+                objects: [
+                    { type: 'neural-nodes', count: 20 },
+                    { type: 'neural-connections', count: 30 },
+                    { type: 'brain-hemisphere', position: [0, 0, 0], size: 2 }
+                ]
+            },
+            quantum: {
+                name: 'Quantum Field',
+                particleCount: 300,
+                objects: [
+                    { type: 'quantum-spheres', count: 15 },
+                    { type: 'quantum-tunnels', count: 8 },
+                    { type: 'probability-cloud', position: [0, 0, 0], size: 3 }
+                ]
+            },
+            galaxy: {
+                name: 'Galaxy View',
+                particleCount: 400,
+                objects: [
+                    { type: 'galaxy-spiral', position: [0, 0, 0], size: 5 },
+                    { type: 'stars', count: 50 },
+                    { type: 'nebula', count: 3 }
+                ]
             }
-            
-            isExpanded = true;
-            jarvisContainer.classList.remove('compact');
-            jarvisContainer.classList.add('expanded');
-            
-            // Focus input after expansion animation
-            setTimeout(() => {
-                if (userInput) {
-                    userInput.focus();
-                }
-            }, 400);
-        }
-
-        function collapseInterface() {
-            if (!isExpanded) return;
-            
-            // Add a small delay to prevent immediate collapse
-            expandTimeout = setTimeout(() => {
-                isExpanded = false;
-                jarvisContainer.classList.remove('expanded');
-                jarvisContainer.classList.add('compact');
-            }, 300);
-        }
-
-        function cancelCollapse() {
-            if (expandTimeout) {
-                clearTimeout(expandTimeout);
-                expandTimeout = null;
-            }
-        }
+        };
 
         // =============================================================================
         // CHAT MESSAGE SYSTEM
@@ -1156,25 +1374,98 @@
             renderer.setClearColor(0x000000, 0);
             container.appendChild(renderer.domElement);
 
-            createParticleSystem();
-            createHolographicScene();
+            createScene(currentScene);
             animate();
 
             window.addEventListener("resize", onWindowResize);
         }
 
-        function createParticleSystem() {
+        function createScene(sceneName) {
+            clearScene();
+            const config = sceneConfigurations[sceneName];
+            
+            createParticleSystem(config.particleCount);
+            
+            config.objects.forEach(obj => {
+                switch(obj.type) {
+                    case 'torus':
+                        createTorus(obj.position, obj.size);
+                        break;
+                    case 'cube':
+                        createCubes(obj.count, obj.size);
+                        break;
+                    case 'grid':
+                        createGrid(obj.position, obj.size);
+                        break;
+                    case 'server-rack':
+                        createServerRacks(obj.count);
+                        break;
+                    case 'data-flow':
+                        createDataFlows(obj.count);
+                        break;
+                    case 'floor-grid':
+                        createFloorGrid(obj.position, obj.size);
+                        break;
+                    case 'crystal-cluster':
+                        createCrystalClusters(obj.count);
+                        break;
+                    case 'crystal-shard':
+                        createCrystalShards(obj.count);
+                        break;
+                    case 'energy-field':
+                        createEnergyField(obj.position, obj.size);
+                        break;
+                    case 'neural-nodes':
+                        createNeuralNodes(obj.count);
+                        break;
+                    case 'neural-connections':
+                        createNeuralConnections(obj.count);
+                        break;
+                    case 'brain-hemisphere':
+                        createBrainHemisphere(obj.position, obj.size);
+                        break;
+                    case 'quantum-spheres':
+                        createQuantumSpheres(obj.count);
+                        break;
+                    case 'quantum-tunnels':
+                        createQuantumTunnels(obj.count);
+                        break;
+                    case 'probability-cloud':
+                        createProbabilityCloud(obj.position, obj.size);
+                        break;
+                    case 'galaxy-spiral':
+                        createGalaxySpiral(obj.position, obj.size);
+                        break;
+                    case 'stars':
+                        createStars(obj.count);
+                        break;
+                    case 'nebula':
+                        createNebula(obj.count);
+                        break;
+                }
+            });
+        }
+
+        function clearScene() {
+            sceneObjects.forEach(obj => {
+                scene.remove(obj);
+                if (obj.geometry) obj.geometry.dispose();
+                if (obj.material) obj.material.dispose();
+            });
+            sceneObjects = [];
+        }
+
+        function createParticleSystem(count) {
             const geometry = new THREE.BufferGeometry();
-            const particleCount = 100;
-            const positions = new Float32Array(particleCount * 3);
-            const colors = new Float32Array(particleCount * 3);
+            const positions = new Float32Array(count * 3);
+            const colors = new Float32Array(count * 3);
 
-            for (let i = 0; i < particleCount * 3; i += 3) {
-                positions[i] = (Math.random() - 0.5) * 15;
-                positions[i + 1] = (Math.random() - 0.5) * 15;
-                positions[i + 2] = (Math.random() - 0.5) * 15;
+            for (let i = 0; i < count * 3; i += 3) {
+                positions[i] = (Math.random() - 0.5) * 20;
+                positions[i + 1] = (Math.random() - 0.5) * 20;
+                positions[i + 2] = (Math.random() - 0.5) * 20;
 
-                colors[i] = 0.0;
+                colors[i] = 0.0 + Math.random() * 0.3;
                 colors[i + 1] = 0.8 + Math.random() * 0.2;
                 colors[i + 2] = 1.0;
             }
@@ -1183,66 +1474,399 @@
             geometry.setAttribute("color", new THREE.BufferAttribute(colors, 3));
 
             const material = new THREE.PointsMaterial({
-                size: 0.03,
+                size: 0.05,
                 vertexColors: true,
                 transparent: true,
-                opacity: 0.6,
+                opacity: 0.8,
             });
 
             particles = new THREE.Points(geometry, material);
             scene.add(particles);
         }
 
-        function createHolographicScene() {
-            // Create a simple holographic torus
-            const torusGeometry = new THREE.TorusGeometry(1, 0.3, 8, 16);
-            const torusMaterial = new THREE.MeshBasicMaterial({
+        // Scene object creation functions
+        function createTorus(position, size) {
+            const geometry = new THREE.TorusGeometry(...size);
+            const material = new THREE.MeshBasicMaterial({
                 color: 0x00ff88,
                 transparent: true,
                 opacity: 0.3,
                 wireframe: true,
             });
-
-            const torus = new THREE.Mesh(torusGeometry, torusMaterial);
-            torus.position.set(0, 0, -2);
+            const torus = new THREE.Mesh(geometry, material);
+            torus.position.set(...position);
+            torus.userData = { type: 'torus' };
             scene.add(torus);
             sceneObjects.push(torus);
+        }
 
-            // Create a grid
-            const gridGeometry = new THREE.PlaneGeometry(8, 8, 16, 16);
-            const gridMaterial = new THREE.MeshBasicMaterial({
+        function createCubes(count, size) {
+            for (let i = 0; i < count; i++) {
+                const geometry = new THREE.BoxGeometry(size, size, size);
+                const material = new THREE.MeshBasicMaterial({
+                    color: 0xffaa00,
+                    transparent: true,
+                    opacity: 0.4,
+                    wireframe: true,
+                });
+                const cube = new THREE.Mesh(geometry, material);
+                cube.position.set(
+                    (Math.random() - 0.5) * 6,
+                    (Math.random() - 0.5) * 4,
+                    (Math.random() - 0.5) * 4
+                );
+                cube.userData = { type: 'cube', rotationSpeed: Math.random() * 0.02 + 0.01 };
+                scene.add(cube);
+                sceneObjects.push(cube);
+            }
+        }
+
+        function createGrid(position, size) {
+            const geometry = new THREE.PlaneGeometry(...size);
+            const material = new THREE.MeshBasicMaterial({
                 color: 0x00d4ff,
                 transparent: true,
                 opacity: 0.1,
                 wireframe: true,
             });
-
-            const grid = new THREE.Mesh(gridGeometry, gridMaterial);
+            const grid = new THREE.Mesh(geometry, material);
+            grid.position.set(...position);
             grid.rotation.x = -Math.PI / 2;
-            grid.position.y = -2;
+            grid.userData = { type: 'grid' };
             scene.add(grid);
             sceneObjects.push(grid);
+        }
+
+        function createServerRacks(count) {
+            for (let i = 0; i < count; i++) {
+                const geometry = new THREE.BoxGeometry(0.5, 2, 0.3);
+                const material = new THREE.MeshBasicMaterial({
+                    color: 0x333333,
+                    transparent: true,
+                    opacity: 0.6,
+                    wireframe: true,
+                });
+                const rack = new THREE.Mesh(geometry, material);
+                rack.position.set(
+                    (Math.random() - 0.5) * 10,
+                    0,
+                    (Math.random() - 0.5) * 10
+                );
+                rack.userData = { type: 'server-rack' };
+                scene.add(rack);
+                sceneObjects.push(rack);
+            }
+        }
+
+        function createDataFlows(count) {
+            for (let i = 0; i < count; i++) {
+                const geometry = new THREE.CylinderGeometry(0.02, 0.02, 3, 8);
+                const material = new THREE.MeshBasicMaterial({
+                    color: 0x00ffff,
+                    transparent: true,
+                    opacity: 0.7,
+                });
+                const flow = new THREE.Mesh(geometry, material);
+                flow.position.set(
+                    (Math.random() - 0.5) * 8,
+                    (Math.random() - 0.5) * 4,
+                    (Math.random() - 0.5) * 8
+                );
+                flow.rotation.z = Math.random() * Math.PI;
+                flow.userData = { type: 'data-flow', pulseSpeed: Math.random() * 0.05 + 0.02 };
+                scene.add(flow);
+                sceneObjects.push(flow);
+            }
+        }
+
+        function createFloorGrid(position, size) {
+            const geometry = new THREE.PlaneGeometry(...size);
+            const material = new THREE.MeshBasicMaterial({
+                color: 0x0066cc,
+                transparent: true,
+                opacity: 0.15,
+                wireframe: true,
+            });
+            const grid = new THREE.Mesh(geometry, material);
+            grid.position.set(...position);
+            grid.rotation.x = -Math.PI / 2;
+            scene.add(grid);
+            sceneObjects.push(grid);
+        }
+
+        function createCrystalClusters(count) {
+            for (let i = 0; i < count; i++) {
+                const geometry = new THREE.OctahedronGeometry(Math.random() * 0.5 + 0.3, 0);
+                const material = new THREE.MeshBasicMaterial({
+                    color: 0xaaaaff,
+                    transparent: true,
+                    opacity: 0.5,
+                    wireframe: true,
+                });
+                const crystal = new THREE.Mesh(geometry, material);
+                crystal.position.set(
+                    (Math.random() - 0.5) * 6,
+                    (Math.random() - 0.5) * 4,
+                    (Math.random() - 0.5) * 6
+                );
+                crystal.userData = { type: 'crystal', growthSpeed: Math.random() * 0.01 + 0.005 };
+                scene.add(crystal);
+                sceneObjects.push(crystal);
+            }
+        }
+
+        function createCrystalShards(count) {
+            for (let i = 0; i < count; i++) {
+                const geometry = new THREE.ConeGeometry(0.1, Math.random() * 0.8 + 0.4, 6);
+                const material = new THREE.MeshBasicMaterial({
+                    color: 0xccccff,
+                    transparent: true,
+                    opacity: 0.4,
+                    wireframe: true,
+                });
+                const shard = new THREE.Mesh(geometry, material);
+                shard.position.set(
+                    (Math.random() - 0.5) * 8,
+                    (Math.random() - 0.5) * 3,
+                    (Math.random() - 0.5) * 8
+                );
+                shard.rotation.x = Math.random() * Math.PI;
+                shard.rotation.z = Math.random() * Math.PI;
+                scene.add(shard);
+                sceneObjects.push(shard);
+            }
+        }
+
+        function createEnergyField(position, size) {
+            const geometry = new THREE.SphereGeometry(size, 16, 16);
+            const material = new THREE.MeshBasicMaterial({
+                color: 0x88ffff,
+                transparent: true,
+                opacity: 0.2,
+                wireframe: true,
+            });
+            const field = new THREE.Mesh(geometry, material);
+            field.position.set(...position);
+            field.userData = { type: 'energy-field' };
+            scene.add(field);
+            sceneObjects.push(field);
+        }
+
+        function createNeuralNodes(count) {
+            for (let i = 0; i < count; i++) {
+                const geometry = new THREE.SphereGeometry(0.1, 8, 8);
+                const material = new THREE.MeshBasicMaterial({
+                    color: 0xff6600,
+                    transparent: true,
+                    opacity: 0.8,
+                });
+                const node = new THREE.Mesh(geometry, material);
+                node.position.set(
+                    (Math.random() - 0.5) * 8,
+                    (Math.random() - 0.5) * 6,
+                    (Math.random() - 0.5) * 8
+                );
+                node.userData = { type: 'neural-node', pulsePhase: Math.random() * Math.PI * 2 };
+                scene.add(node);
+                sceneObjects.push(node);
+            }
+        }
+
+        function createNeuralConnections(count) {
+            for (let i = 0; i < count; i++) {
+                const geometry = new THREE.CylinderGeometry(0.01, 0.01, Math.random() * 2 + 1, 6);
+                const material = new THREE.MeshBasicMaterial({
+                    color: 0xffaa00,
+                    transparent: true,
+                    opacity: 0.6,
+                });
+                const connection = new THREE.Mesh(geometry, material);
+                connection.position.set(
+                    (Math.random() - 0.5) * 6,
+                    (Math.random() - 0.5) * 4,
+                    (Math.random() - 0.5) * 6
+                );
+                connection.rotation.set(
+                    Math.random() * Math.PI,
+                    Math.random() * Math.PI,
+                    Math.random() * Math.PI
+                );
+                scene.add(connection);
+                sceneObjects.push(connection);
+            }
+        }
+
+        function createBrainHemisphere(position, size) {
+            const geometry = new THREE.SphereGeometry(size, 16, 16, 0, Math.PI);
+            const material = new THREE.MeshBasicMaterial({
+                color: 0xff8800,
+                transparent: true,
+                opacity: 0.3,
+                wireframe: true,
+            });
+            const brain = new THREE.Mesh(geometry, material);
+            brain.position.set(...position);
+            brain.userData = { type: 'brain' };
+            scene.add(brain);
+            sceneObjects.push(brain);
+        }
+
+        function createQuantumSpheres(count) {
+            for (let i = 0; i < count; i++) {
+                const geometry = new THREE.SphereGeometry(Math.random() * 0.3 + 0.1, 8, 8);
+                const material = new THREE.MeshBasicMaterial({
+                    color: 0x6600ff,
+                    transparent: true,
+                    opacity: 0.5,
+                    wireframe: true,
+                });
+                const sphere = new THREE.Mesh(geometry, material);
+                sphere.position.set(
+                    (Math.random() - 0.5) * 10,
+                    (Math.random() - 0.5) * 6,
+                    (Math.random() - 0.5) * 10
+                );
+                sphere.userData = { type: 'quantum-sphere', phaseSpeed: Math.random() * 0.03 + 0.01 };
+                scene.add(sphere);
+                sceneObjects.push(sphere);
+            }
+        }
+
+        function createQuantumTunnels(count) {
+            for (let i = 0; i < count; i++) {
+                const geometry = new THREE.TorusGeometry(Math.random() * 0.8 + 0.4, 0.1, 8, 16);
+                const material = new THREE.MeshBasicMaterial({
+                    color: 0xaa00ff,
+                    transparent: true,
+                    opacity: 0.4,
+                    wireframe: true,
+                });
+                const tunnel = new THREE.Mesh(geometry, material);
+                tunnel.position.set(
+                    (Math.random() - 0.5) * 8,
+                    (Math.random() - 0.5) * 4,
+                    (Math.random() - 0.5) * 8
+                );
+                tunnel.rotation.set(
+                    Math.random() * Math.PI,
+                    Math.random() * Math.PI,
+                    Math.random() * Math.PI
+                );
+                tunnel.userData = { type: 'quantum-tunnel', rotationSpeed: Math.random() * 0.02 + 0.01 };
+                scene.add(tunnel);
+                sceneObjects.push(tunnel);
+            }
+        }
+
+        function createProbabilityCloud(position, size) {
+            const geometry = new THREE.SphereGeometry(size, 16, 16);
+            const material = new THREE.MeshBasicMaterial({
+                color: 0x9900ff,
+                transparent: true,
+                opacity: 0.15,
+                wireframe: true,
+            });
+            const cloud = new THREE.Mesh(geometry, material);
+            cloud.position.set(...position);
+            cloud.userData = { type: 'probability-cloud' };
+            scene.add(cloud);
+            sceneObjects.push(cloud);
+        }
+
+        function createGalaxySpiral(position, size) {
+            const geometry = new THREE.TorusGeometry(size, size * 0.3, 16, 100);
+            const material = new THREE.MeshBasicMaterial({
+                color: 0x6666ff,
+                transparent: true,
+                opacity: 0.4,
+                wireframe: true,
+            });
+            const spiral = new THREE.Mesh(geometry, material);
+            spiral.position.set(...position);
+            spiral.rotation.x = Math.PI / 4;
+            spiral.userData = { type: 'galaxy-spiral' };
+            scene.add(spiral);
+            sceneObjects.push(spiral);
+        }
+
+        function createStars(count) {
+            for (let i = 0; i < count; i++) {
+                const geometry = new THREE.SphereGeometry(0.02, 4, 4);
+                const material = new THREE.MeshBasicMaterial({
+                    color: 0xffffff,
+                    transparent: true,
+                    opacity: Math.random() * 0.8 + 0.2,
+                });
+                const star = new THREE.Mesh(geometry, material);
+                star.position.set(
+                    (Math.random() - 0.5) * 20,
+                    (Math.random() - 0.5) * 15,
+                    (Math.random() - 0.5) * 20
+                );
+                star.userData = { type: 'star', twinkleSpeed: Math.random() * 0.05 + 0.02 };
+                scene.add(star);
+                sceneObjects.push(star);
+            }
+        }
+
+        function createNebula(count) {
+            for (let i = 0; i < count; i++) {
+                const geometry = new THREE.SphereGeometry(Math.random() * 2 + 1, 8, 8);
+                const material = new THREE.MeshBasicMaterial({
+                    color: new THREE.Color().setHSL(Math.random(), 0.7, 0.5),
+                    transparent: true,
+                    opacity: 0.2,
+                });
+                const nebula = new THREE.Mesh(geometry, material);
+                nebula.position.set(
+                    (Math.random() - 0.5) * 15,
+                    (Math.random() - 0.5) * 10,
+                    (Math.random() - 0.5) * 15
+                );
+                scene.add(nebula);
+                sceneObjects.push(nebula);
+            }
         }
 
         function animate() {
             animationId = requestAnimationFrame(animate);
 
+            // Animate particles
             if (particles) {
-                particles.rotation.y += 0.001;
-                particles.rotation.x += 0.0005;
+                particles.rotation.y += 0.002;
+                particles.rotation.x += 0.001;
             }
 
-            sceneObjects.forEach((obj, index) => {
-                if (obj.geometry && obj.geometry.type === 'TorusGeometry') {
-                    obj.rotation.x += 0.005;
-                    obj.rotation.y += 0.01;
-                    obj.position.y = Math.sin(Date.now() * 0.001) * 0.3;
+            // Animate scene objects
+            sceneObjects.forEach(obj => {
+                if (obj.userData.type === 'torus') {
+                    obj.rotation.x += 0.01;
+                    obj.rotation.y += 0.02;
+                    obj.position.y = Math.sin(Date.now() * 0.001) * 0.5;
+                } else if (obj.userData.type === 'cube' && obj.userData.rotationSpeed) {
+                    obj.rotation.x += obj.userData.rotationSpeed;
+                    obj.rotation.y += obj.userData.rotationSpeed * 0.7;
+                } else if (obj.userData.type === 'data-flow' && obj.userData.pulseSpeed) {
+                    obj.material.opacity = 0.5 + Math.sin(Date.now() * obj.userData.pulseSpeed) * 0.3;
+                } else if (obj.userData.type === 'crystal' && obj.userData.growthSpeed) {
+                    obj.scale.setScalar(1 + Math.sin(Date.now() * obj.userData.growthSpeed) * 0.2);
+                } else if (obj.userData.type === 'neural-node' && obj.userData.pulsePhase) {
+                    obj.scale.setScalar(1 + Math.sin(Date.now() * 0.01 + obj.userData.pulsePhase) * 0.3);
+                } else if (obj.userData.type === 'quantum-sphere' && obj.userData.phaseSpeed) {
+                    obj.material.opacity = 0.3 + Math.sin(Date.now() * obj.userData.phaseSpeed) * 0.3;
+                } else if (obj.userData.type === 'quantum-tunnel' && obj.userData.rotationSpeed) {
+                    obj.rotation.x += obj.userData.rotationSpeed;
+                    obj.rotation.y += obj.userData.rotationSpeed * 0.5;
+                } else if (obj.userData.type === 'galaxy-spiral') {
+                    obj.rotation.z += 0.005;
+                } else if (obj.userData.type === 'star' && obj.userData.twinkleSpeed) {
+                    obj.material.opacity = 0.4 + Math.sin(Date.now() * obj.userData.twinkleSpeed) * 0.4;
                 }
             });
 
             // Subtle camera movement
-            camera.position.x = Math.sin(Date.now() * 0.0003) * 0.3;
-            camera.position.y = Math.cos(Date.now() * 0.0002) * 0.2;
+            camera.position.x = Math.sin(Date.now() * 0.0005) * 0.5;
+            camera.position.y = Math.cos(Date.now() * 0.0003) * 0.3;
             camera.lookAt(0, 0, 0);
 
             renderer.render(scene, camera);
@@ -1255,8 +1879,12 @@
         }
 
         // =============================================================================
-        // COLOR THEME SYSTEM
+        // COLOR THEME & SCENE SELECTORS
         // =============================================================================
+
+        function toggleDropdown(dropdown) {
+            dropdown.classList.toggle('active');
+        }
 
         function selectColorTheme(theme) {
             currentColorTheme = theme;
@@ -1272,7 +1900,56 @@
             document.querySelector(`[data-color="${theme}"]`).classList.add('active');
             
             colorDropdown.classList.remove('active');
+            
+            // Save settings
+            saveSettings();
             showNotification(`Color theme changed to ${theme}`);
+        }
+
+        function selectScene(sceneName) {
+            currentScene = sceneName;
+            createScene(sceneName);
+            
+            // Update active state
+            document.querySelectorAll('#sceneDropdown .selector-option').forEach(option => {
+                option.classList.remove('active');
+            });
+            document.querySelector(`[data-scene="${sceneName}"]`).classList.add('active');
+            
+            sceneDropdown.classList.remove('active');
+            
+            // Save settings
+            saveSettings();
+            showNotification(`3D Scene changed to ${sceneConfigurations[sceneName].name}`);
+        }
+
+        function applyLoadedSettings() {
+            // Apply color theme
+            jarvisContainer.className = jarvisContainer.className.replace(/theme-\w+/, '');
+            jarvisContainer.classList.add(`theme-${currentColorTheme}`);
+            
+            // Update color theme UI
+            document.querySelectorAll('#colorDropdown .selector-option').forEach(option => {
+                option.classList.remove('active');
+            });
+            const colorOption = document.querySelector(`[data-color="${currentColorTheme}"]`);
+            if (colorOption) {
+                colorOption.classList.add('active');
+            }
+            
+            // Apply scene
+            createScene(currentScene);
+            
+            // Update scene UI
+            document.querySelectorAll('#sceneDropdown .selector-option').forEach(option => {
+                option.classList.remove('active');
+            });
+            const sceneOption = document.querySelector(`[data-scene="${currentScene}"]`);
+            if (sceneOption) {
+                sceneOption.classList.add('active');
+            }
+            
+            console.log(`Applied settings: ${currentColorTheme} theme, ${currentScene} scene`);
         }
 
         function showNotification(message) {
@@ -1287,51 +1964,81 @@
         }
 
         // =============================================================================
+        // WINDOW CONTROLS
+        // =============================================================================
+
+        function minimizeWindow() {
+            showNotification("Minimize - Would minimize in Electron app");
+            console.log("Minimize window");
+        }
+
+        function closeWindow() {
+            showNotification("Close - Would close in Electron app");
+            console.log("Close window");
+        }
+
+        // =============================================================================
         // MOCK AGENT SYSTEM
         // =============================================================================
 
         const mockAgentResponses = {
             visual: [
-                "Interface expanded successfully.",
-                "Visual matrix recalibrated.",
-                "Holographic display optimized.",
-                "UI elements synchronized."
+                "Visual matrix recalibrated successfully.",
+                "3D environment parameters updated.",
+                "Color palette synchronized with core systems.",
+                "Holographic display optimized for current theme."
+            ],
+            settings: [
+                "Settings saved to local storage.",
+                "Configuration preferences updated.",
+                "User profile synchronized.",
+                "Preferences exported successfully."
             ],
             scheduler: [
                 "Reminder set for 2:30 PM.",
                 "You have 3 events scheduled today.",
                 "Meeting with Sarah moved to 4:00 PM.",
-                "Calendar synchronized."
+                "Calendar synchronized with external systems.",
             ],
             weather: [
                 "72°F and sunny in Boston.",
                 "Chance of rain at 40% this afternoon.",
-                "Current temperature: 68°F.",
-                "UV index is moderate."
+                "Current temperature: 68°F, feels like 71°F.",
+                "UV index is moderate. Sunscreen recommended.",
+            ],
+            home: [
+                "Smart lights disabled.",
+                "Thermostat set to 72°F.",
+                "Security system armed.",
+                "All devices synchronized.",
             ],
             system: [
                 "All systems operational.",
                 "Running diagnostics... Complete.",
                 "Network connection stable.",
-                "Power levels optimal."
+                "Power levels optimal.",
             ],
             assistant: [
                 "How may I assist you today?",
                 "Processing your request...",
-                "Standing by for instructions.",
-                "Task completed successfully."
-            ]
+                "Standing by for further instructions.",
+                "Task completed successfully.",
+            ],
         };
 
         function selectMockAgent(input) {
             const lowercaseInput = input.toLowerCase();
 
-            if (lowercaseInput.includes("expand") || lowercaseInput.includes("interface") || lowercaseInput.includes("ui")) {
+            if (lowercaseInput.includes("color") || lowercaseInput.includes("theme") || lowercaseInput.includes("3d") || lowercaseInput.includes("scene")) {
                 return "visual";
+            } else if (lowercaseInput.includes("save") || lowercaseInput.includes("settings") || lowercaseInput.includes("export") || lowercaseInput.includes("clear")) {
+                return "settings";
             } else if (lowercaseInput.includes("remind") || lowercaseInput.includes("schedule")) {
                 return "scheduler";
             } else if (lowercaseInput.includes("weather") || lowercaseInput.includes("temperature")) {
                 return "weather";
+            } else if (lowercaseInput.includes("light") || lowercaseInput.includes("home")) {
+                return "home";
             } else if (lowercaseInput.includes("system") || lowercaseInput.includes("status")) {
                 return "system";
             } else {
@@ -1355,6 +2062,14 @@
             return new Promise((resolve) => {
                 const delay = Math.random() * 1000 + 500;
                 setTimeout(() => {
+                    // Handle special commands
+                    const lowercaseInput = input.toLowerCase();
+                    if (lowercaseInput.includes("export settings")) {
+                        exportSettings();
+                    } else if (lowercaseInput.includes("clear data")) {
+                        clearStoredData();
+                    }
+                    
                     resolve(getMockAgentResponse(input));
                 }, delay);
             });
@@ -1382,6 +2097,9 @@
                 const response = await processUserInput(input);
                 hideTypingIndicator();
                 addMessage(response.response, "assistant", response.system);
+                
+                // Save chat history after each message
+                saveChatHistory();
             } catch (error) {
                 console.error("Error processing input:", error);
                 hideTypingIndicator();
@@ -1395,20 +2113,6 @@
         // =============================================================================
         // EVENT LISTENERS
         // =============================================================================
-
-        // Main orb hover events
-        mainOrb.addEventListener('mouseenter', () => {
-            expandInterface();
-        });
-
-        // Container hover events
-        jarvisContainer.addEventListener('mouseenter', () => {
-            cancelCollapse();
-        });
-
-        jarvisContainer.addEventListener('mouseleave', () => {
-            collapseInterface();
-        });
 
         // Chat input
         userInput.addEventListener("keydown", (e) => {
@@ -1436,18 +2140,19 @@
         sendBtn.addEventListener("click", handleUserInput);
 
         // Window controls
-        minimizeBtn.addEventListener("click", () => {
-            console.log("Minimize - Would minimize in Electron app");
-        });
-
-        closeBtn.addEventListener("click", () => {
-            console.log("Close - Would close in Electron app");
-        });
+        minimizeBtn.addEventListener("click", minimizeWindow);
+        closeBtn.addEventListener("click", closeWindow);
 
         // Color theme selector
         colorToggle.addEventListener("click", (e) => {
             e.stopPropagation();
-            colorDropdown.classList.toggle('active');
+            toggleDropdown(colorDropdown);
+        });
+
+        // Scene selector
+        sceneToggle.addEventListener("click", (e) => {
+            e.stopPropagation();
+            toggleDropdown(sceneDropdown);
         });
 
         // Color theme options
@@ -1458,10 +2163,19 @@
             });
         });
 
+        // Scene options
+        document.querySelectorAll('#sceneDropdown .selector-option').forEach(option => {
+            option.addEventListener('click', (e) => {
+                e.stopPropagation();
+                selectScene(option.dataset.scene);
+            });
+        });
+
         // Close dropdowns when clicking outside
         document.addEventListener('click', (e) => {
             if (!e.target.closest('.selector')) {
                 colorDropdown.classList.remove('active');
+                sceneDropdown.classList.remove('active');
             }
         });
 
@@ -1470,27 +2184,57 @@
         // =============================================================================
 
         document.addEventListener("DOMContentLoaded", () => {
-            console.log("DOM loaded, initializing JARVIS with compact UI...");
+            console.log("DOM loaded, initializing JARVIS with advanced 3D scenes...");
+            
+            // Load saved settings first
+            const settingsLoaded = loadSettings();
             
             // Initialize Three.js
             initThreeJS();
+            
+            // Apply loaded settings after Three.js is ready
+            if (settingsLoaded) {
+                applyLoadedSettings();
+                console.log("Settings restored from previous session");
+            }
+            
+            // Load chat history
+            const historyLoaded = loadChatHistory();
+            
+            // Focus input
+            userInput.focus();
 
-            // Add welcome message
-            setTimeout(() => {
-                addMessage(
-                    "Compact interface initialized. Hover over the orb to expand.",
-                    "assistant",
-                    "CORE"
-                );
-            }, 1000);
+            // Add welcome message only if no history was loaded
+            if (!historyLoaded) {
+                setTimeout(() => {
+                    addMessage(
+                        "Advanced holographic interface initialized. All visual systems online. How may I assist you today?",
+                        "assistant",
+                        "CORE"
+                    );
+                }, 1000);
+            } else {
+                // Add a session restored message
+                setTimeout(() => {
+                    addMessage(
+                        "Session restored. Welcome back, sir. All systems operational.",
+                        "assistant",
+                        "CORE"
+                    );
+                }, 500);
+            }
 
-            console.log("🤖 JARVIS Desktop Assistant with compact UI initialized");
-            console.log("✨ Hover over the orb to expand the interface");
-            console.log("🌌 3D background active");
+            console.log("🤖 JARVIS Desktop Assistant with persistence initialized");
+            console.log("🎨 Color themes: Classic, Matrix, Neon, Fire, Ocean, Purple");
+            console.log("🌌 3D Scenes: Hologram, Data Center, Crystal, Neural, Quantum, Galaxy");
+            console.log("💾 Settings and chat history will be saved automatically");
         });
 
-        // Cleanup on page unload
+        // Auto-save on page unload
         window.addEventListener("beforeunload", () => {
+            saveSettings();
+            saveChatHistory();
+            
             if (animationId) {
                 cancelAnimationFrame(animationId);
             }
@@ -1498,6 +2242,12 @@
                 renderer.dispose();
             }
         });
+
+        // Auto-save settings every 30 seconds
+        setInterval(() => {
+            saveSettings();
+            saveChatHistory();
+        }, 30000);
     </script>
 </body>
 </html>
