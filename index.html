@@ -632,6 +632,36 @@
 
         .input-area {
             -webkit-app-region: no-drag;
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            width: 24px;
+            height: 40px;
+            overflow: hidden;
+            transition: width 0.3s ease;
+            z-index: 1000;
+        }
+
+        .input-area:hover {
+            width: 260px;
+        }
+
+        .input-area:not(:hover) .user-input,
+        .input-area:not(:hover) .send-btn {
+            width: 0;
+            opacity: 0;
+            pointer-events: none;
+            margin-left: 0;
+        }
+
+        .input-area:not(:hover) .input-prompt {
+            margin-right: 0;
+        }
+
+        .input-area:hover .user-input,
+        .input-area:hover .send-btn {
+            opacity: 1;
+            pointer-events: auto;
         }
 
         .input-container {
