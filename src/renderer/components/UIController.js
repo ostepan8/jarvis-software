@@ -1,8 +1,17 @@
 // extracted from original index.html and renderer.js
 // NOTE: handles DOM creation and events
-import { addMessage, showTypingIndicator, hideTypingIndicator } from '../components/ChatManager.js';
-import { initThreeJS, cleanupThreeJS, triggerProcessingEffect, setScene } from '../three/scene.js';
-import { getMockAgentResponse, processUserInput } from '../utils/helpers.js';
+import {
+  addMessage,
+  showTypingIndicator,
+  hideTypingIndicator,
+} from "../components/ChatManager.js";
+import {
+  initThreeJS,
+  cleanupThreeJS,
+  triggerProcessingEffect,
+  setScene,
+} from "../three/scene.js";
+import { getMockAgentResponse, processUserInput } from "../utils/helpers.js";
 
 // HTML template injected into #app
 const template = `
@@ -112,173 +121,331 @@ const template = `
 let isProcessing = false;
 let commandHistory = [];
 let historyIndex = -1;
+let currentColorTheme = "classic";
+let currentScene = "hologram";
+
+// Clear any conflicting localStorage on startup
+function clearConflictingStorage() {
+  try {
+    // Clear any existing JARVIS-related localStorage
+    const keysToRemove = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (
+        key &&
+        (key.includes("jarvis") ||
+          key.includes("color") ||
+          key.includes("scene"))
+      ) {
+        keysToRemove.push(key);
+      }
+    }
+    keysToRemove.forEach((key) => localStorage.removeItem(key));
+    console.log("Cleared conflicting localStorage keys:", keysToRemove);
+  } catch (error) {
+    console.error("Error clearing localStorage:", error);
+  }
+}
 
 function setupDOM() {
-  document.getElementById('app').innerHTML = template;
+  document.getElementById("app").innerHTML = template;
 }
 
-function getElements() {
-  return {
-    userInput: document.getElementById('userInput'),
-    sendBtn: document.getElementById('sendBtn'),
-    jarvisContainer: document.querySelector('.jarvis-container'),
-    minimizeBtn: document.getElementById('minimizeBtn'),
-    closeBtn: document.getElementById('closeBtn'),
-    colorToggle: document.getElementById('colorToggle'),
-    colorDropdown: document.getElementById('colorDropdown'),
-    colorOptions: document.querySelectorAll('#colorDropdown .selector-option'),
-    sceneToggle: document.getElementById('sceneToggle'),
-    sceneDropdown: document.getElementById('sceneDropdown'),
-    sceneOptions: document.querySelectorAll('#sceneDropdown .selector-option')
-  };
+function selectColorTheme(theme) {
+  console.log("selectColorTheme called with:", theme);
+  currentColorTheme = theme;
+  const jarvisContainer = document.querySelector(".jarvis-container");
+
+  if (!jarvisContainer) {
+    console.error("jarvisContainer not found!");
+    return;
+  }
+
+  // Remove all theme classes
+  jarvisContainer.className = jarvisContainer.className.replace(
+    /theme-\w+/g,
+    ""
+  );
+  jarvisContainer.classList.add(`theme-${theme}`);
+
+  // Update active state
+  document
+    .querySelectorAll("#colorDropdown .selector-option")
+    .forEach((option) => {
+      option.classList.remove("active");
+    });
+  const activeOption = document.querySelector(`[data-color="${theme}"]`);
+  if (activeOption) {
+    activeOption.classList.add("active");
+  }
+
+  const colorDropdown = document.getElementById("colorDropdown");
+  if (colorDropdown) {
+    colorDropdown.classList.remove("active");
+  }
+
+  console.log("Color theme applied:", theme);
 }
 
-function applyColorPreference(color, elements) {
-  if (!color) return;
-  elements.colorOptions.forEach(o => {
-    if (o.dataset.color === color) {
-      o.classList.add('active');
-    } else {
-      o.classList.remove('active');
-    }
-  });
-  elements.jarvisContainer.classList.forEach(cls => {
-    if (cls.startsWith('theme-')) {
-      elements.jarvisContainer.classList.remove(cls);
-    }
-  });
-  elements.jarvisContainer.classList.add(`theme-${color}`);
+function selectScene(sceneName) {
+  console.log("selectScene called with:", sceneName);
+  currentScene = sceneName;
+
+  try {
+    setScene(sceneName);
+    console.log("setScene called successfully for:", sceneName);
+  } catch (error) {
+    console.error("Error calling setScene:", error);
+  }
+
+  // Update active state
+  document
+    .querySelectorAll("#sceneDropdown .selector-option")
+    .forEach((option) => {
+      option.classList.remove("active");
+    });
+  const activeOption = document.querySelector(`[data-scene="${sceneName}"]`);
+  if (activeOption) {
+    activeOption.classList.add("active");
+    console.log("Active scene option updated");
+  } else {
+    console.error("Could not find scene option for:", sceneName);
+  }
+
+  const sceneDropdown = document.getElementById("sceneDropdown");
+  if (sceneDropdown) {
+    sceneDropdown.classList.remove("active");
+  }
+
+  console.log("Scene selection completed for:", sceneName);
 }
 
-function applyScenePreference(scene, elements) {
-  if (!scene) return;
-  elements.sceneOptions.forEach(o => {
-    if (o.dataset.scene === scene) {
-      o.classList.add('active');
-    } else {
-      o.classList.remove('active');
-    }
-  });
-  setScene(scene);
-}
+async function handleUserInput() {
+  const userInput = document.getElementById("userInput");
+  const jarvisContainer = document.querySelector(".jarvis-container");
 
-function loadPreferences(elements) {
-  const savedColor = localStorage.getItem('jarvis-color');
-  const savedScene = localStorage.getItem('jarvis-scene');
-  applyColorPreference(savedColor, elements);
-  applyScenePreference(savedScene, elements);
-}
-
-async function handleUserInput(elements) {
-  const input = elements.userInput.value.trim();
+  const input = userInput.value.trim();
   if (!input || isProcessing) return;
-  addMessage(input, 'user');
+
+  addMessage(input, "user");
   commandHistory.unshift(input);
   if (commandHistory.length > 50) commandHistory.pop();
   historyIndex = -1;
-  elements.userInput.value = '';
+  userInput.value = "";
   isProcessing = true;
-  elements.jarvisContainer.classList.add('processing');
+  jarvisContainer.classList.add("processing");
   showTypingIndicator();
   triggerProcessingEffect();
+
   try {
     const response = await processUserInput(input);
     hideTypingIndicator();
-    addMessage(response.response, 'assistant', response.system);
-    elements.jarvisContainer.classList.remove('processing');
+    addMessage(response.response, "assistant", response.system);
+    jarvisContainer.classList.remove("processing");
   } catch (err) {
     console.error(err);
   } finally {
     isProcessing = false;
   }
 }
-
 function bindUI() {
-  const elements = getElements();
-  elements.userInput.addEventListener('keydown', e => {
-    if (e.key === 'Enter' && !e.shiftKey) {
+  console.log("bindUI called");
+
+  // Get elements fresh each time
+  const userInput = document.getElementById("userInput");
+  const sendBtn = document.getElementById("sendBtn");
+  const minimizeBtn = document.getElementById("minimizeBtn");
+  const closeBtn = document.getElementById("closeBtn");
+  const colorToggle = document.getElementById("colorToggle");
+  const colorDropdown = document.getElementById("colorDropdown");
+  const sceneToggle = document.getElementById("sceneToggle");
+  const sceneDropdown = document.getElementById("sceneDropdown");
+
+  if (!userInput || !sendBtn || !colorToggle || !sceneToggle) {
+    console.error("Some UI elements not found during binding!");
+    return;
+  }
+
+  // Input handlers
+  userInput.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
-      handleUserInput(elements);
-    } else if (e.key === 'ArrowUp') {
+      handleUserInput();
+    } else if (e.key === "ArrowUp") {
       e.preventDefault();
       if (historyIndex < commandHistory.length - 1) {
         historyIndex++;
-        elements.userInput.value = commandHistory[historyIndex];
+        userInput.value = commandHistory[historyIndex];
       }
-    } else if (e.key === 'ArrowDown') {
+    } else if (e.key === "ArrowDown") {
       e.preventDefault();
       if (historyIndex > 0) {
         historyIndex--;
-        elements.userInput.value = commandHistory[historyIndex];
+        userInput.value = commandHistory[historyIndex];
       } else if (historyIndex === 0) {
         historyIndex = -1;
-        elements.userInput.value = '';
+        userInput.value = "";
       }
     }
   });
-  elements.sendBtn.addEventListener('click', e => {
+
+  sendBtn.addEventListener("click", (e) => {
     e.stopPropagation();
-    handleUserInput(elements);
-  });
-  elements.minimizeBtn.addEventListener('click', e => {
-    e.stopPropagation();
-    window.electronAPI.send('minimize-app');
-  });
-  elements.closeBtn.addEventListener('click', e => {
-    e.stopPropagation();
-    window.electronAPI.send('close-app');
+    handleUserInput();
   });
 
-  elements.colorToggle.addEventListener('click', e => {
+  // Window controls
+  minimizeBtn.addEventListener("click", (e) => {
     e.stopPropagation();
-    elements.colorDropdown.classList.toggle('active');
-    elements.sceneDropdown.classList.remove('active');
+    window.electronAPI.send("minimize-app");
   });
 
-  elements.sceneToggle.addEventListener('click', e => {
+  closeBtn.addEventListener("click", (e) => {
     e.stopPropagation();
-    elements.sceneDropdown.classList.toggle('active');
-    elements.colorDropdown.classList.remove('active');
+    window.electronAPI.send("close-app");
   });
 
-  elements.colorOptions.forEach(option => {
-    option.addEventListener('click', () => {
-      const color = option.dataset.color;
-      applyColorPreference(color, elements);
-      localStorage.setItem('jarvis-color', color);
-      elements.colorDropdown.classList.remove('active');
+  // Dropdown toggles
+  colorToggle.addEventListener("click", (e) => {
+    e.stopPropagation();
+    console.log("Color toggle clicked");
+    colorDropdown.classList.toggle("active");
+    sceneDropdown.classList.remove("active");
+  });
+
+  sceneToggle.addEventListener("click", (e) => {
+    e.stopPropagation();
+    console.log("Scene toggle clicked");
+    sceneDropdown.classList.toggle("active");
+    colorDropdown.classList.remove("active");
+  });
+
+  // Use a more direct approach with proper event delegation
+  function bindDropdownOptions() {
+    console.log("Binding dropdown options...");
+
+    // Color theme options - bind to each individual option
+    const colorOptions = document.querySelectorAll(
+      "#colorDropdown .selector-option"
+    );
+    console.log("Found", colorOptions.length, "color options");
+
+    colorOptions.forEach((option, index) => {
+      const colorValue = option.dataset.color;
+      console.log(`Binding color option ${index}: ${colorValue}`);
+
+      // Remove any existing listeners first
+      option.removeEventListener("click", handleColorClick);
+      option.removeEventListener("mousedown", handleColorClick);
+
+      // Add both click and mousedown for better compatibility
+      option.addEventListener("click", handleColorClick);
+      option.addEventListener("mousedown", handleColorClick);
+
+      function handleColorClick(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        console.log("Color option clicked:", colorValue);
+        selectColorTheme(colorValue);
+      }
     });
-  });
 
-  elements.sceneOptions.forEach(option => {
-    option.addEventListener('click', () => {
-      const scene = option.dataset.scene;
-      applyScenePreference(scene, elements);
-      localStorage.setItem('jarvis-scene', scene);
-      elements.sceneDropdown.classList.remove('active');
+    // Scene options - bind to each individual option
+    const sceneOptions = document.querySelectorAll(
+      "#sceneDropdown .selector-option"
+    );
+    console.log("Found", sceneOptions.length, "scene options");
+
+    sceneOptions.forEach((option, index) => {
+      const sceneValue = option.dataset.scene;
+      console.log(`Binding scene option ${index}: ${sceneValue}`);
+
+      // Remove any existing listeners first
+      option.removeEventListener("click", handleSceneClick);
+      option.removeEventListener("mousedown", handleSceneClick);
+
+      // Add both click and mousedown for better compatibility
+      option.addEventListener("click", handleSceneClick);
+      option.addEventListener("mousedown", handleSceneClick);
+
+      function handleSceneClick(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        console.log("Scene option clicked:", sceneValue);
+        selectScene(sceneValue);
+      }
     });
+
+    console.log("Dropdown options binding completed");
+  }
+
+  // Call the binding function immediately
+  bindDropdownOptions();
+
+  // Also add a fallback event delegation approach
+  document.addEventListener("click", (e) => {
+    // Check if click is inside a dropdown option
+    const colorOption = e.target.closest("#colorDropdown .selector-option");
+    if (colorOption && colorOption.dataset.color) {
+      e.preventDefault();
+      e.stopPropagation();
+      console.log("Fallback: Color option clicked:", colorOption.dataset.color);
+      selectColorTheme(colorOption.dataset.color);
+      return;
+    }
+
+    const sceneOption = e.target.closest("#sceneDropdown .selector-option");
+    if (sceneOption && sceneOption.dataset.scene) {
+      e.preventDefault();
+      e.stopPropagation();
+      console.log("Fallback: Scene option clicked:", sceneOption.dataset.scene);
+      selectScene(sceneOption.dataset.scene);
+      return;
+    }
+
+    // Close dropdowns when clicking outside
+    if (!e.target.closest(".selector")) {
+      colorDropdown.classList.remove("active");
+      sceneDropdown.classList.remove("active");
+    }
   });
 
-  document.addEventListener('click', () => {
-    elements.colorDropdown.classList.remove('active');
-    elements.sceneDropdown.classList.remove('active');
-  });
+  console.log("UI binding completed");
 }
-
 function initialize() {
+  console.log("initialize called");
+
+  // Clear any conflicting localStorage first
+  clearConflictingStorage();
+
   setupDOM();
-  bindUI();
-  initThreeJS();
-  const elements = getElements();
-  loadPreferences(elements);
-  document.getElementById('userInput').focus();
-  // Welcome message
+
+  // Small delay to ensure DOM is ready
   setTimeout(() => {
-    addMessage('Good evening, sir. All systems operational. How may I assist you today?', 'assistant', 'CORE');
-  }, 1500);
-  window.addEventListener('beforeunload', () => {
+    bindUI();
+    initThreeJS();
+
+    // Focus input
+    const userInput = document.getElementById("userInput");
+    if (userInput) {
+      userInput.focus();
+    }
+
+    // Welcome message
+    setTimeout(() => {
+      addMessage(
+        "Good evening, sir. All systems operational. How may I assist you today?",
+        "assistant",
+        "CORE"
+      );
+    }, 1500);
+  }, 100);
+
+  window.addEventListener("beforeunload", () => {
     cleanupThreeJS();
   });
+
+  console.log("initialize completed");
 }
 
 export { initialize };

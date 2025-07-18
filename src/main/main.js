@@ -8,12 +8,12 @@ let isClickThrough = false;
 function createWindow() {
   // Create the browser window with JARVIS-like properties
   mainWindow = new BrowserWindow({
-    width: 380,
-    height: 200,
-    minWidth: 300,
-    minHeight: 150,
-    maxWidth: 600,
-    maxHeight: 400,
+    width: 800,
+    height: 600,
+    minWidth: 600,
+    minHeight: 400,
+    maxWidth: 1200,
+    maxHeight: 800,
     frame: false, // Frameless window
     transparent: true, // Transparent background
     alwaysOnTop: true, // Always stay on top
@@ -21,7 +21,7 @@ function createWindow() {
     skipTaskbar: true, // Don't show in taskbar
     hasShadow: false, // No window shadow
     webPreferences: {
-      preload: path.join(__dirname, 'preload.js'),
+      preload: path.join(__dirname, "preload.js"),
       nodeIntegration: false,
       contextIsolation: true,
       enableRemoteModule: false,
@@ -30,7 +30,7 @@ function createWindow() {
   });
 
   // Load the app
-  mainWindow.loadFile(path.join(__dirname, '..', 'renderer', 'index.html'));
+  mainWindow.loadFile(path.join(__dirname, "..", "renderer", "index.html"));
 
   // Position window at top-right corner initially
   const { screen } = require("electron");

@@ -5,7 +5,10 @@ let typingIndicator = null;
 
 function addMessage(content, type = "assistant", system = "CORE") {
   const messagesContainer = document.getElementById("messagesContainer");
-  const timestamp = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+  const timestamp = new Date().toLocaleTimeString([], {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
   const message = { id: Date.now(), content, type, system, timestamp };
   messages.push(message);
   renderMessage(message);
@@ -86,4 +89,10 @@ function clearMessages() {
   messagesContainer.innerHTML = "";
 }
 
-export { addMessage, showTypingIndicator, hideTypingIndicator, clearMessages, scrollToBottom };
+export {
+  addMessage,
+  showTypingIndicator,
+  hideTypingIndicator,
+  clearMessages,
+  scrollToBottom,
+};
