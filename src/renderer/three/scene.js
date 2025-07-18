@@ -2,6 +2,7 @@
 // NOTE: manages Three.js scene
 let scene, camera, renderer, particles, hologram;
 let animationId;
+let currentScene = 'hologram';
 
 function initThreeJS() {
   const container = document.getElementById('threejsContainer');
@@ -15,6 +16,7 @@ function initThreeJS() {
   createParticleSystem();
   createHolographicGrid();
   createFloatingGeometry();
+  applyScene(currentScene);
   animate();
   window.addEventListener('resize', onWindowResize);
 }
@@ -108,4 +110,34 @@ function cleanupThreeJS() {
   if (scene) scene.clear();
 }
 
-export { initThreeJS, cleanupThreeJS, triggerProcessingEffect };
+function applyScene(name) {
+  if (!hologram) return;
+  switch (name) {
+    case 'datacenter':
+      hologram.material.color.set(0x00ff00);
+      break;
+    case 'crystal':
+      hologram.geometry.dispose();
+      hologram.geometry = new THREE.OctahedronGeometry(1);
+      hologram.material.color.set(0x00ccff);
+      break;
+    case 'neural':
+      hologram.material.color.set(0xff00aa);
+      break;
+    case 'quantum':
+      hologram.material.color.set(0xaa00ff);
+      break;
+    case 'galaxy':
+      hologram.material.color.set(0x6666ff);
+      break;
+    default:
+      hologram.material.color.set(0x00ff88);
+  }
+}
+
+function setScene(name) {
+  currentScene = name;
+  applyScene(name);
+}
+
+export { initThreeJS, cleanupThreeJS, triggerProcessingEffect, setScene };

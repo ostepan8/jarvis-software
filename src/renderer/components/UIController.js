@@ -123,7 +123,13 @@ function getElements() {
     sendBtn: document.getElementById('sendBtn'),
     jarvisContainer: document.querySelector('.jarvis-container'),
     minimizeBtn: document.getElementById('minimizeBtn'),
-    closeBtn: document.getElementById('closeBtn')
+    closeBtn: document.getElementById('closeBtn'),
+    colorToggle: document.getElementById('colorToggle'),
+    colorDropdown: document.getElementById('colorDropdown'),
+    colorOptions: document.querySelectorAll('#colorDropdown .selector-option'),
+    sceneToggle: document.getElementById('sceneToggle'),
+    sceneDropdown: document.getElementById('sceneDropdown'),
+    sceneOptions: document.querySelectorAll('#sceneDropdown .selector-option')
   };
 }
 
@@ -185,6 +191,48 @@ function bindUI() {
   elements.closeBtn.addEventListener('click', e => {
     e.stopPropagation();
     window.electronAPI.send('close-app');
+  });
+
+  elements.colorToggle.addEventListener('click', e => {
+    e.stopPropagation();
+    elements.colorDropdown.classList.toggle('active');
+    elements.sceneDropdown.classList.remove('active');
+  });
+
+  elements.sceneToggle.addEventListener('click', e => {
+    e.stopPropagation();
+    elements.sceneDropdown.classList.toggle('active');
+    elements.colorDropdown.classList.remove('active');
+  });
+
+  elements.colorOptions.forEach(option => {
+    option.addEventListener('click', () => {
+      elements.colorOptions.forEach(o => o.classList.remove('active'));
+      option.classList.add('active');
+      const color = option.dataset.color;
+      elements.jarvisContainer.classList.forEach(cls => {
+        if (cls.startsWith('theme-')) {
+          elements.jarvisContainer.classList.remove(cls);
+        }
+      });
+      elements.jarvisContainer.classList.add(`theme-${color}`);
+      elements.colorDropdown.classList.remove('active');
+    });
+  });
+
+  elements.sceneOptions.forEach(option => {
+    option.addEventListener('click', () => {
+      elements.sceneOptions.forEach(o => o.classList.remove('active'));
+      option.classList.add('active');
+      const scene = option.dataset.scene;
+      window.setScene(scene);
+      elements.sceneDropdown.classList.remove('active');
+    });
+  });
+
+  document.addEventListener('click', () => {
+    elements.colorDropdown.classList.remove('active');
+    elements.sceneDropdown.classList.remove('active');
   });
 }
 

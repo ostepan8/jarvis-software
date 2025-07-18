@@ -71,7 +71,9 @@ function createWindow() {
 
   // Handle minimize button
   ipcMain.on("minimize-app", () => {
-    mainWindow.hide();
+    if (mainWindow) {
+      mainWindow.minimize();
+    }
   });
 
   // Handle window focus/blur for transparency effects
