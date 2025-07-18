@@ -1,18 +1,29 @@
 {
-  "name": "jarvis-desktop-assistant",
+  "name": "jarvis-desktop",
   "version": "1.0.0",
-  "description": "Translucent always-on-top JARVIS desktop assistant built with Electron",
-  "main": "main.js",
+  "description": "Scalable JARVIS desktop GUI using Electron and React",
+  "main": "public/electron.js",
   "scripts": {
-    "start": "electron .",
-    "dev": "electron . --dev",
-    "build": "electron-builder"
+    "react": "vite",
+    "build": "vite build",
+    "wait": "wait-on http://localhost:5173",
+    "electron": "cross-env NODE_ENV=development electron .",
+    "dev": "concurrently \"npm:react\" \"npm:wait\" \"npm:electron\""
   },
   "keywords": ["electron", "jarvis", "assistant", "ai", "desktop"],
   "author": "Your Name",
   "license": "MIT",
   "devDependencies": {
-    "electron": "^27.0.0"
+    "@vitejs/plugin-react": "^4.0.0",
+    "concurrently": "^8.0.1",
+    "cross-env": "^7.0.3",
+    "electron": "^27.0.0",
+    "vite": "^5.0.0",
+    "wait-on": "^7.0.1"
   },
-  "dependencies": {}
+  "dependencies": {
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "react-router-dom": "^6.3.0"
+  }
 }
