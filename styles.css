@@ -1,0 +1,331 @@
+/* JARVIS Desktop Assistant Styles */
+
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Orbitron', monospace;
+    background: transparent;
+    color: #00d4ff;
+    overflow: hidden;
+    user-select: none;
+    -webkit-app-region: drag;
+}
+
+.jarvis-container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    background: linear-gradient(135deg, 
+        rgba(0, 10, 30, 0.95) 0%, 
+        rgba(0, 25, 50, 0.9) 50%, 
+        rgba(0, 15, 35, 0.95) 100%);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(0, 212, 255, 0.3);
+    border-radius: 8px;
+    box-shadow: 
+        0 0 30px rgba(0, 212, 255, 0.2),
+        inset 0 0 30px rgba(0, 212, 255, 0.05);
+    display: flex;
+    flex-direction: column;
+    padding: 12px;
+    overflow: hidden;
+}
+
+/* Header */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    border-bottom: 1px solid rgba(0, 212, 255, 0.2);
+    margin-bottom: 12px;
+    -webkit-app-region: no-drag;
+}
+
+.status-indicator {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.pulse-dot {
+    width: 8px;
+    height: 8px;
+    background: #00ff88;
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { 
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% { 
+        opacity: 0.6;
+        transform: scale(1.2);
+    }
+}
+
+.status-text {
+    font-size: 10px;
+    font-weight: 700;
+    color: #00ff88;
+    letter-spacing: 1px;
+}
+
+.controls {
+    display: flex;
+    gap: 8px;
+}
+
+.control-btn {
+    background: rgba(0, 212, 255, 0.1);
+    border: 1px solid rgba(0, 212, 255, 0.3);
+    border-radius: 4px;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    -webkit-app-region: no-drag;
+}
+
+.control-btn:hover {
+    background: rgba(0, 212, 255, 0.2);
+    box-shadow: 0 0 8px rgba(0, 212, 255, 0.4);
+}
+
+.control-btn .icon {
+    color: #00d4ff;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+/* Assistant Display */
+.assistant-display {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 16px;
+    position: relative;
+}
+
+.system-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+    opacity: 0.7;
+}
+
+.system-label span {
+    font-size: 10px;
+    font-weight: 700;
+    color: #ffaa00;
+    letter-spacing: 2px;
+}
+
+.loading-dots {
+    display: flex;
+    gap: 2px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.loading-dots.active {
+    opacity: 1;
+}
+
+.loading-dots span {
+    width: 3px;
+    height: 3px;
+    background: #ffaa00;
+    border-radius: 50%;
+    animation: loadingDots 1.4s infinite ease-in-out;
+}
+
+.loading-dots span:nth-child(1) { animation-delay: -0.32s; }
+.loading-dots span:nth-child(2) { animation-delay: -0.16s; }
+.loading-dots span:nth-child(3) { animation-delay: 0s; }
+
+@keyframes loadingDots {
+    0%, 80%, 100% { transform: scale(0.8); opacity: 0.5; }
+    40% { transform: scale(1.2); opacity: 1; }
+}
+
+.assistant-message {
+    font-size: 14px;
+    line-height: 1.4;
+    color: #00d4ff;
+    text-shadow: 0 0 8px rgba(0, 212, 255, 0.5);
+    animation: textGlow 3s ease-in-out infinite alternate;
+    word-wrap: break-word;
+}
+
+@keyframes textGlow {
+    0% { text-shadow: 0 0 8px rgba(0, 212, 255, 0.5); }
+    100% { text-shadow: 0 0 12px rgba(0, 212, 255, 0.8); }
+}
+
+/* Input Area */
+.input-area {
+    -webkit-app-region: no-drag;
+    margin-top: 12px;
+}
+
+.input-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(0, 212, 255, 0.3);
+    border-radius: 4px;
+    padding: 8px 12px;
+    transition: all 0.3s ease;
+}
+
+.input-container:focus-within {
+    border-color: #00d4ff;
+    box-shadow: 0 0 12px rgba(0, 212, 255, 0.3);
+}
+
+.input-prompt {
+    color: #00ff88;
+    font-weight: 700;
+    margin-right: 8px;
+    font-size: 14px;
+}
+
+.user-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: #00d4ff;
+    font-family: 'Orbitron', monospace;
+    font-size: 12px;
+    outline: none;
+    resize: none;
+    min-height: 20px;
+    max-height: 60px;
+    overflow-y: auto;
+}
+
+.user-input::placeholder {
+    color: rgba(0, 212, 255, 0.5);
+}
+
+.user-input::-webkit-scrollbar {
+    width: 4px;
+}
+
+.user-input::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.user-input::-webkit-scrollbar-thumb {
+    background: rgba(0, 212, 255, 0.5);
+    border-radius: 2px;
+}
+
+.input-glow {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, 
+        transparent 0%, 
+        rgba(0, 212, 255, 0.1) 50%, 
+        transparent 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+    border-radius: 4px;
+}
+
+.input-container:focus-within .input-glow {
+    opacity: 1;
+}
+
+/* Background Effects */
+.background-grid {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+        linear-gradient(rgba(0, 212, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 212, 255, 0.03) 1px, transparent 1px);
+    background-size: 20px 20px;
+    pointer-events: none;
+    z-index: -1;
+}
+
+.scan-line {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, 
+        transparent 0%, 
+        rgba(0, 212, 255, 0.8) 50%, 
+        transparent 100%);
+    animation: scanLine 4s linear infinite;
+    pointer-events: none;
+}
+
+@keyframes scanLine {
+    0% { transform: translateY(-2px); }
+    100% { transform: translateY(calc(100vh + 2px)); }
+}
+
+/* Window States */
+.jarvis-container.window-blur {
+    opacity: 0.8;
+}
+
+.jarvis-container.click-through {
+    opacity: 0.6;
+}
+
+.jarvis-container.click-through .input-area {
+    pointer-events: none;
+}
+
+/* Responsive adjustments */
+@media (max-width: 400px) {
+    .jarvis-container {
+        padding: 8px;
+    }
+    
+    .assistant-message {
+        font-size: 12px;
+    }
+    
+    .user-input {
+        font-size: 11px;
+    }
+}
+
+/* Processing state */
+.processing .assistant-message {
+    opacity: 0.7;
+    animation: processing 1s ease-in-out infinite;
+}
+
+@keyframes processing {
+    0%, 100% { opacity: 0.7; }
+    50% { opacity: 1; }
+}

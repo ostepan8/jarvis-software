@@ -1,0 +1,1503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JARVIS Desktop Assistant</title>
+    <style>
+        /* JARVIS Desktop Assistant Styles */
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Orbitron', monospace;
+            background: transparent;
+            color: var(--primary-color);
+            overflow: hidden;
+            user-select: none;
+        }
+
+        :root {
+            --primary-color: #00d4ff;
+            --secondary-color: #00ff88;
+            --accent-color: #ffaa00;
+            --bg-primary: rgba(0, 10, 30, 0.95);
+            --bg-secondary: rgba(0, 25, 50, 0.9);
+            --bg-tertiary: rgba(0, 15, 35, 0.95);
+        }
+
+        /* Color Themes */
+        .theme-classic {
+            --primary-color: #00d4ff;
+            --secondary-color: #00ff88;
+            --accent-color: #ffaa00;
+            --bg-primary: rgba(0, 10, 30, 0.95);
+            --bg-secondary: rgba(0, 25, 50, 0.9);
+            --bg-tertiary: rgba(0, 15, 35, 0.95);
+        }
+
+        .theme-matrix {
+            --primary-color: #00ff41;
+            --secondary-color: #41ff00;
+            --accent-color: #88ff00;
+            --bg-primary: rgba(0, 20, 0, 0.95);
+            --bg-secondary: rgba(0, 40, 0, 0.9);
+            --bg-tertiary: rgba(0, 25, 0, 0.95);
+        }
+
+        .theme-neon {
+            --primary-color: #ff00ff;
+            --secondary-color: #00ffff;
+            --accent-color: #ff0088;
+            --bg-primary: rgba(20, 0, 20, 0.95);
+            --bg-secondary: rgba(40, 0, 40, 0.9);
+            --bg-tertiary: rgba(25, 0, 25, 0.95);
+        }
+
+        .theme-fire {
+            --primary-color: #ff6600;
+            --secondary-color: #ffaa00;
+            --accent-color: #ff4400;
+            --bg-primary: rgba(30, 10, 0, 0.95);
+            --bg-secondary: rgba(50, 15, 0, 0.9);
+            --bg-tertiary: rgba(35, 5, 0, 0.95);
+        }
+
+        .theme-ocean {
+            --primary-color: #0099ff;
+            --secondary-color: #00ccff;
+            --accent-color: #0066cc;
+            --bg-primary: rgba(0, 15, 30, 0.95);
+            --bg-secondary: rgba(0, 25, 50, 0.9);
+            --bg-tertiary: rgba(0, 20, 40, 0.95);
+        }
+
+        .theme-purple {
+            --primary-color: #9900ff;
+            --secondary-color: #cc00ff;
+            --accent-color: #6600cc;
+            --bg-primary: rgba(15, 0, 30, 0.95);
+            --bg-secondary: rgba(25, 0, 50, 0.9);
+            --bg-tertiary: rgba(20, 0, 40, 0.95);
+        }
+
+        .jarvis-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(135deg, 
+                var(--bg-primary) 0%, 
+                var(--bg-secondary) 50%, 
+                var(--bg-tertiary) 100%);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--primary-color);
+            border-radius: 8px;
+            box-shadow: 
+                0 0 30px rgba(0, 212, 255, 0.2),
+                inset 0 0 30px rgba(0, 212, 255, 0.05);
+            display: flex;
+            flex-direction: column;
+            padding: 12px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        /* Compact mode - default state */
+        .jarvis-container.compact {
+            width: 120px;
+            height: 120px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: radial-gradient(circle, 
+                var(--bg-primary) 0%, 
+                var(--bg-secondary) 50%, 
+                var(--bg-tertiary) 100%);
+        }
+
+        .jarvis-container.compact .header,
+        .jarvis-container.compact .chat-container,
+        .jarvis-container.compact .input-area,
+        .jarvis-container.compact .background-grid,
+        .jarvis-container.compact .scan-line {
+            display: none;
+        }
+
+        .jarvis-container.compact .jarvis-orb {
+            transform: scale(2);
+        }
+
+        /* Expanded mode - hover state */
+        .jarvis-container.expanded {
+            width: 400px;
+            height: 300px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, 
+                var(--bg-primary) 0%, 
+                var(--bg-secondary) 50%, 
+                var(--bg-tertiary) 100%);
+            animation: expandContainer 0.4s ease-out;
+        }
+
+        @keyframes expandContainer {
+            0% {
+                width: 120px;
+                height: 120px;
+                border-radius: 50%;
+            }
+            100% {
+                width: 400px;
+                height: 300px;
+                border-radius: 8px;
+            }
+        }
+
+        .jarvis-container.expanded .header,
+        .jarvis-container.expanded .chat-container,
+        .jarvis-container.expanded .input-area,
+        .jarvis-container.expanded .background-grid,
+        .jarvis-container.expanded .scan-line {
+            display: flex;
+            animation: fadeInElements 0.3s ease-out 0.2s both;
+        }
+
+        .jarvis-container.expanded .background-grid,
+        .jarvis-container.expanded .scan-line {
+            display: block;
+        }
+
+        .jarvis-container.expanded .jarvis-orb {
+            transform: scale(1);
+        }
+
+        @keyframes fadeInElements {
+            0% {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 12px;
+            border-bottom: 1px solid rgba(0, 212, 255, 0.3);
+            margin-bottom: 12px;
+            -webkit-app-region: drag;
+            cursor: move;
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status-text {
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--secondary-color);
+            letter-spacing: 1px;
+        }
+
+        .controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .control-btn {
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 4px;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            -webkit-app-region: no-drag;
+        }
+
+        .control-btn:hover {
+            background: rgba(0, 212, 255, 0.2);
+            box-shadow: 0 0 8px rgba(0, 212, 255, 0.4);
+        }
+
+        .control-btn .icon {
+            color: #00d4ff;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        /* Selectors */
+        .selector {
+            position: relative;
+            -webkit-app-region: no-drag;
+        }
+
+        .selector-btn {
+            background: rgba(255, 170, 0, 0.1);
+            border: 1px solid rgba(255, 170, 0, 0.3);
+            border-radius: 4px;
+            height: 24px;
+            padding: 0 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 9px;
+            color: #ffaa00;
+            font-weight: bold;
+            min-width: 32px;
+        }
+
+        .selector-btn:hover {
+            background: rgba(255, 170, 0, 0.2);
+            box-shadow: 0 0 8px rgba(255, 170, 0, 0.4);
+        }
+
+        .selector-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: var(--bg-primary);
+            border: 1px solid var(--primary-color);
+            border-radius: 8px;
+            padding: 8px;
+            min-width: 200px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            display: none;
+            margin-top: 4px;
+        }
+
+        .selector-dropdown.active {
+            display: block;
+            animation: dropdownSlide 0.3s ease-out;
+        }
+
+        @keyframes dropdownSlide {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .selector-option {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+        }
+
+        .selector-option:hover {
+            background: rgba(0, 212, 255, 0.1);
+            border-color: rgba(0, 212, 255, 0.3);
+        }
+
+        .selector-option.active {
+            background: rgba(0, 212, 255, 0.2);
+            border-color: rgba(0, 212, 255, 0.5);
+        }
+
+        .option-preview {
+            width: 40px;
+            height: 24px;
+            border-radius: 4px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+            background: #000;
+        }
+
+        /* Color Theme Previews */
+        .option-preview.classic { background: linear-gradient(45deg, #003366, #0066cc); }
+        .option-preview.matrix { background: linear-gradient(45deg, #001100, #00ff00); }
+        .option-preview.neon { background: linear-gradient(45deg, #ff00ff, #00ffff); }
+        .option-preview.fire { background: linear-gradient(45deg, #ff4400, #ffaa00); }
+        .option-preview.ocean { background: linear-gradient(45deg, #001133, #0099ff); }
+        .option-preview.purple { background: linear-gradient(45deg, #330066, #9900ff); }
+
+        .option-name {
+            font-size: 10px;
+            color: var(--primary-color);
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        /* Chat Container */
+        .chat-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            margin-bottom: 12px;
+        }
+
+        .messages-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .messages-container::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .messages-container::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .messages-container::-webkit-scrollbar-thumb {
+            background: rgba(0, 212, 255, 0.5);
+            border-radius: 2px;
+        }
+
+        /* Message Styles */
+        .message {
+            margin-bottom: 12px;
+            animation: messageSlideIn 0.3s ease-out;
+        }
+
+        @keyframes messageSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+
+        .message-sender {
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            opacity: 0.8;
+        }
+
+        .message.user .message-sender {
+            color: var(--secondary-color);
+        }
+
+        .message.assistant .message-sender {
+            color: var(--accent-color);
+        }
+
+        .message-timestamp {
+            font-size: 8px;
+            opacity: 0.6;
+            color: var(--primary-color);
+        }
+
+        .message-content {
+            font-size: 12px;
+            line-height: 1.4;
+            color: var(--primary-color);
+            word-wrap: break-word;
+            text-shadow: 0 0 8px var(--primary-color);
+        }
+
+        .message.assistant .message-content {
+            animation: textGlow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes textGlow {
+            0% { text-shadow: 0 0 8px var(--primary-color); }
+            100% { text-shadow: 0 0 12px var(--primary-color); }
+        }
+
+        .message.user .message-content {
+            color: var(--secondary-color);
+            text-shadow: 0 0 8px var(--secondary-color);
+        }
+
+        /* Typing Indicator */
+        .typing-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 10px;
+            color: var(--accent-color);
+            opacity: 0.8;
+        }
+
+        .typing-dots {
+            display: flex;
+            gap: 2px;
+        }
+
+        .typing-dots span {
+            width: 3px;
+            height: 3px;
+            background: var(--accent-color);
+            border-radius: 50%;
+            animation: typingDots 1.4s infinite ease-in-out;
+        }
+
+        .typing-dots span:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dots span:nth-child(2) { animation-delay: -0.16s; }
+        .typing-dots span:nth-child(3) { animation-delay: 0s; }
+
+        @keyframes typingDots {
+            0%, 80%, 100% { transform: scale(0.8); opacity: 0.5; }
+            40% { transform: scale(1.2); opacity: 1; }
+        }
+
+        .input-area {
+            -webkit-app-region: no-drag;
+        }
+
+        .input-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 4px;
+            padding: 8px 12px;
+            transition: all 0.3s ease;
+        }
+
+        .input-container:focus-within {
+            border-color: #00d4ff;
+            box-shadow: 0 0 12px rgba(0, 212, 255, 0.3);
+        }
+
+        .input-prompt {
+            color: var(--secondary-color);
+            font-weight: 700;
+            margin-right: 8px;
+            font-size: 14px;
+        }
+
+        .user-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: var(--primary-color);
+            font-family: 'Orbitron', monospace;
+            font-size: 12px;
+            outline: none;
+            resize: none;
+            min-height: 20px;
+            max-height: 60px;
+            overflow-y: auto;
+        }
+
+        .user-input::placeholder {
+            color: rgba(0, 212, 255, 0.5);
+        }
+
+        .send-btn {
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 4px;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-left: 8px;
+        }
+
+        .send-btn:hover {
+            background: rgba(0, 212, 255, 0.2);
+            box-shadow: 0 0 8px rgba(0, 212, 255, 0.4);
+        }
+
+        .send-icon {
+            color: #00d4ff;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .background-grid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                linear-gradient(rgba(0, 212, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 212, 255, 0.03) 1px, transparent 1px);
+            background-size: 20px 20px;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .scan-line {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, 
+                transparent 0%, 
+                rgba(0, 212, 255, 0.8) 50%, 
+                transparent 100%);
+            animation: scanLine 4s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes scanLine {
+            0% { transform: translateY(-2px); }
+            100% { transform: translateY(calc(100vh + 2px)); }
+        }
+
+        /* JARVIS Orb Profile Picture */
+        .jarvis-orb {
+            position: relative;
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .jarvis-container.compact .jarvis-orb {
+            width: 64px;
+            height: 64px;
+        }
+
+        .orb-core {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: radial-gradient(circle at 30% 30%, var(--primary-color), var(--secondary-color), var(--accent-color));
+            border-radius: 50%;
+            box-shadow: 
+                0 0 12px var(--primary-color),
+                0 0 24px var(--secondary-color),
+                0 0 36px var(--accent-color),
+                inset 0 0 12px rgba(255, 255, 255, 0.3);
+            animation: coreGlow 2s ease-in-out infinite alternate;
+        }
+
+        .jarvis-container.compact .orb-core {
+            width: 28px;
+            height: 28px;
+        }
+
+        @keyframes coreGlow {
+            0% { 
+                transform: scale(1);
+                box-shadow: 
+                    0 0 12px var(--primary-color),
+                    0 0 24px var(--secondary-color),
+                    0 0 36px var(--accent-color),
+                    inset 0 0 12px rgba(255, 255, 255, 0.3);
+            }
+            100% { 
+                transform: scale(1.1);
+                box-shadow: 
+                    0 0 18px var(--primary-color),
+                    0 0 36px var(--secondary-color),
+                    0 0 54px var(--accent-color),
+                    inset 0 0 18px rgba(255, 255, 255, 0.5);
+            }
+        }
+
+        .orb-ring {
+            position: absolute;
+            border-radius: 50%;
+            border: 1px solid var(--primary-color);
+            animation: ringRotate 8s linear infinite;
+            opacity: 0.6;
+        }
+
+        .ring-1 {
+            width: 32px;
+            height: 32px;
+            border-color: var(--primary-color);
+            animation: ringRotate 4s linear infinite;
+            opacity: 0.8;
+        }
+
+        .ring-2 {
+            width: 40px;
+            height: 40px;
+            border-color: var(--secondary-color);
+            animation: ringRotate 6s linear infinite reverse;
+            opacity: 0.6;
+        }
+
+        .ring-3 {
+            width: 48px;
+            height: 48px;
+            border-color: var(--accent-color);
+            animation: ringRotate 8s linear infinite;
+            opacity: 0.4;
+        }
+
+        .jarvis-container.compact .ring-1 {
+            width: 44px;
+            height: 44px;
+        }
+
+        .jarvis-container.compact .ring-2 {
+            width: 56px;
+            height: 56px;
+        }
+
+        .jarvis-container.compact .ring-3 {
+            width: 64px;
+            height: 64px;
+        }
+
+        @keyframes ringRotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .orb-particles {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+        }
+
+        .jarvis-container.compact .orb-particles {
+            width: 80px;
+            height: 80px;
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            box-shadow: 0 0 4px var(--primary-color);
+            opacity: 0.8;
+        }
+
+        .particle:nth-child(1) {
+            top: 2px;
+            left: 29px;
+            animation: particleOrbit 3s linear infinite;
+        }
+
+        .particle:nth-child(2) {
+            top: 15px;
+            right: 2px;
+            animation: particleOrbit 3s linear infinite 0.5s;
+        }
+
+        .particle:nth-child(3) {
+            bottom: 2px;
+            left: 29px;
+            animation: particleOrbit 3s linear infinite 1s;
+        }
+
+        .particle:nth-child(4) {
+            top: 15px;
+            left: 2px;
+            animation: particleOrbit 3s linear infinite 1.5s;
+        }
+
+        .particle:nth-child(5) {
+            top: 8px;
+            right: 12px;
+            animation: particleOrbit 4s linear infinite 2s;
+        }
+
+        .particle:nth-child(6) {
+            bottom: 8px;
+            left: 12px;
+            animation: particleOrbit 4s linear infinite 2.5s;
+        }
+
+        @keyframes particleOrbit {
+            0% { 
+                transform: rotate(0deg) translateX(28px) rotate(0deg);
+                opacity: 1;
+            }
+            50% { 
+                opacity: 0.5;
+            }
+            100% { 
+                transform: rotate(360deg) translateX(28px) rotate(-360deg);
+                opacity: 1;
+            }
+        }
+
+        /* Processing state */
+        .processing .jarvis-orb .orb-core {
+            animation: processingCore 0.5s ease-in-out infinite alternate;
+        }
+
+        .processing .jarvis-orb .orb-ring {
+            animation-duration: 1s;
+            border-color: var(--accent-color);
+            opacity: 0.8;
+        }
+
+        .processing .jarvis-orb .particle {
+            background: var(--accent-color);
+            box-shadow: 0 0 6px var(--accent-color);
+        }
+
+        @keyframes processingCore {
+            0% { 
+                background: radial-gradient(circle at 30% 30%, var(--accent-color), var(--primary-color), var(--secondary-color));
+            }
+            100% { 
+                background: radial-gradient(circle at 30% 30%, var(--primary-color), var(--accent-color), var(--secondary-color));
+            }
+        }
+
+        /* Three.js Container */
+        .threejs-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -2;
+            opacity: 0.8;
+        }
+
+        .threejs-container canvas {
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+        /* Hover effects */
+        .jarvis-orb:hover {
+            transform: scale(1.05);
+        }
+
+        .jarvis-container.compact .jarvis-orb:hover {
+            transform: scale(2.1);
+        }
+
+        /* Tooltip for compact mode */
+        .hover-tooltip {
+            position: absolute;
+            bottom: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--bg-primary);
+            color: var(--primary-color);
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+            border: 1px solid var(--primary-color);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+            z-index: 100;
+        }
+
+        .jarvis-container.compact .jarvis-orb:hover .hover-tooltip {
+            opacity: 1;
+        }
+
+        /* Notification */
+        .demo-notification {
+            position: absolute;
+            top: 50px;
+            right: 20px;
+            background: var(--accent-color);
+            color: #000;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: bold;
+            z-index: 1001;
+            animation: notificationSlide 0.3s ease-out;
+            opacity: 0.9;
+        }
+
+        @keyframes notificationSlide {
+            from {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+            to {
+                opacity: 0.9;
+                transform: translateX(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="jarvis-container theme-classic compact">
+        <!-- Header with controls (hidden in compact mode) -->
+        <div class="header">
+            <div class="status-indicator">
+                <div class="jarvis-orb">
+                    <div class="orb-core"></div>
+                    <div class="orb-ring ring-1"></div>
+                    <div class="orb-ring ring-2"></div>
+                    <div class="orb-ring ring-3"></div>
+                    <div class="orb-particles">
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                    </div>
+                </div>
+                <span class="status-text">JARVIS ONLINE</span>
+            </div>
+            <div class="controls">
+                <div class="selector">
+                    <button class="selector-btn" id="colorToggle">COL</button>
+                    <div class="selector-dropdown" id="colorDropdown">
+                        <div class="selector-option active" data-color="classic">
+                            <div class="option-preview classic"></div>
+                            <span class="option-name">Classic</span>
+                        </div>
+                        <div class="selector-option" data-color="matrix">
+                            <div class="option-preview matrix"></div>
+                            <span class="option-name">Matrix</span>
+                        </div>
+                        <div class="selector-option" data-color="neon">
+                            <div class="option-preview neon"></div>
+                            <span class="option-name">Neon</span>
+                        </div>
+                        <div class="selector-option" data-color="fire">
+                            <div class="option-preview fire"></div>
+                            <span class="option-name">Fire</span>
+                        </div>
+                        <div class="selector-option" data-color="ocean">
+                            <div class="option-preview ocean"></div>
+                            <span class="option-name">Ocean</span>
+                        </div>
+                        <div class="selector-option" data-color="purple">
+                            <div class="option-preview purple"></div>
+                            <span class="option-name">Purple</span>
+                        </div>
+                    </div>
+                </div>
+                <button id="minimizeBtn" class="control-btn" title="Minimize">
+                    <span class="icon">−</span>
+                </button>
+                <button id="closeBtn" class="control-btn" title="Close">
+                    <span class="icon">×</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Chat Messages Area (hidden in compact mode) -->
+        <div class="chat-container">
+            <div id="messagesContainer" class="messages-container">
+                <!-- Messages will be populated here -->
+            </div>
+        </div>
+
+        <!-- Input area (hidden in compact mode) -->
+        <div class="input-area">
+            <div class="input-container">
+                <span class="input-prompt">></span>
+                <input 
+                    type="text" 
+                    id="userInput" 
+                    class="user-input" 
+                    placeholder="Enter command..."
+                    autocomplete="off"
+                    spellcheck="false"
+                />
+                <button id="sendBtn" class="send-btn">
+                    <span class="send-icon">→</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Compact mode - just the orb -->
+        <div class="jarvis-orb" id="mainOrb">
+            <div class="orb-core"></div>
+            <div class="orb-ring ring-1"></div>
+            <div class="orb-ring ring-2"></div>
+            <div class="orb-ring ring-3"></div>
+            <div class="orb-particles">
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+            </div>
+            <div class="hover-tooltip">Hover to expand JARVIS</div>
+        </div>
+
+        <!-- Three.js 3D Background -->
+        <div id="threejsContainer" class="threejs-container"></div>
+
+        <!-- Background effects -->
+        <div class="background-grid"></div>
+        <div class="scan-line"></div>
+    </div>
+
+    <!-- Three.js Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    
+    <script>
+        // JARVIS Desktop Assistant - Compact UI with Hover Expansion
+        
+        // DOM Elements
+        const messagesContainer = document.getElementById("messagesContainer");
+        const userInput = document.getElementById("userInput");
+        const sendBtn = document.getElementById("sendBtn");
+        const jarvisContainer = document.querySelector(".jarvis-container");
+        const mainOrb = document.getElementById("mainOrb");
+        const minimizeBtn = document.getElementById("minimizeBtn");
+        const closeBtn = document.getElementById("closeBtn");
+        const colorToggle = document.getElementById("colorToggle");
+        const colorDropdown = document.getElementById("colorDropdown");
+
+        // Application State
+        let isProcessing = false;
+        let commandHistory = [];
+        let historyIndex = -1;
+        let messages = [];
+        let typingIndicator = null;
+        let currentColorTheme = 'classic';
+        let isExpanded = false;
+        let expandTimeout = null;
+
+        // Three.js variables
+        let scene, camera, renderer, particles, sceneObjects = [];
+        let animationId;
+
+        // =============================================================================
+        // COMPACT/EXPANDED MODE CONTROL
+        // =============================================================================
+
+        function expandInterface() {
+            if (isExpanded) return;
+            
+            // Clear any existing timeout
+            if (expandTimeout) {
+                clearTimeout(expandTimeout);
+            }
+            
+            isExpanded = true;
+            jarvisContainer.classList.remove('compact');
+            jarvisContainer.classList.add('expanded');
+            
+            // Focus input after expansion animation
+            setTimeout(() => {
+                if (userInput) {
+                    userInput.focus();
+                }
+            }, 400);
+        }
+
+        function collapseInterface() {
+            if (!isExpanded) return;
+            
+            // Add a small delay to prevent immediate collapse
+            expandTimeout = setTimeout(() => {
+                isExpanded = false;
+                jarvisContainer.classList.remove('expanded');
+                jarvisContainer.classList.add('compact');
+            }, 300);
+        }
+
+        function cancelCollapse() {
+            if (expandTimeout) {
+                clearTimeout(expandTimeout);
+                expandTimeout = null;
+            }
+        }
+
+        // =============================================================================
+        // CHAT MESSAGE SYSTEM
+        // =============================================================================
+
+        function addMessage(content, type = "assistant", system = "CORE") {
+            if (!messagesContainer) return;
+
+            const timestamp = new Date().toLocaleTimeString([], {
+                hour: "2-digit",
+                minute: "2-digit",
+            });
+
+            const message = {
+                id: Date.now(),
+                content,
+                type,
+                system,
+                timestamp,
+            };
+
+            messages.push(message);
+            renderMessage(message);
+            scrollToBottom();
+        }
+
+        function renderMessage(message) {
+            const messageEl = document.createElement("div");
+            messageEl.className = `message ${message.type}`;
+            messageEl.dataset.id = message.id;
+
+            const headerEl = document.createElement("div");
+            headerEl.className = "message-header";
+
+            const senderEl = document.createElement("span");
+            senderEl.className = "message-sender";
+            senderEl.textContent = message.type === "user" ? "USER" : message.system;
+
+            const timestampEl = document.createElement("span");
+            timestampEl.className = "message-timestamp";
+            timestampEl.textContent = message.timestamp;
+
+            headerEl.appendChild(senderEl);
+            headerEl.appendChild(timestampEl);
+
+            const contentEl = document.createElement("div");
+            contentEl.className = "message-content";
+            contentEl.textContent = message.content;
+
+            messageEl.appendChild(headerEl);
+            messageEl.appendChild(contentEl);
+
+            messagesContainer.appendChild(messageEl);
+        }
+
+        function showTypingIndicator() {
+            if (typingIndicator) return;
+
+            const indicatorEl = document.createElement("div");
+            indicatorEl.className = "message assistant";
+            indicatorEl.innerHTML = `
+                <div class="message-header">
+                    <span class="message-sender">JARVIS</span>
+                </div>
+                <div class="typing-indicator">
+                    <span>Processing</span>
+                    <div class="typing-dots">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </div>
+            `;
+
+            typingIndicator = indicatorEl;
+            messagesContainer.appendChild(indicatorEl);
+            scrollToBottom();
+        }
+
+        function hideTypingIndicator() {
+            if (typingIndicator) {
+                messagesContainer.removeChild(typingIndicator);
+                typingIndicator = null;
+            }
+        }
+
+        function scrollToBottom() {
+            setTimeout(() => {
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }, 50);
+        }
+
+        // =============================================================================
+        // THREE.JS 3D SCENE SYSTEM
+        // =============================================================================
+
+        function initThreeJS() {
+            const container = document.getElementById("threejsContainer");
+            if (!container) return;
+
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 5;
+
+            renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setClearColor(0x000000, 0);
+            container.appendChild(renderer.domElement);
+
+            createParticleSystem();
+            createHolographicScene();
+            animate();
+
+            window.addEventListener("resize", onWindowResize);
+        }
+
+        function createParticleSystem() {
+            const geometry = new THREE.BufferGeometry();
+            const particleCount = 100;
+            const positions = new Float32Array(particleCount * 3);
+            const colors = new Float32Array(particleCount * 3);
+
+            for (let i = 0; i < particleCount * 3; i += 3) {
+                positions[i] = (Math.random() - 0.5) * 15;
+                positions[i + 1] = (Math.random() - 0.5) * 15;
+                positions[i + 2] = (Math.random() - 0.5) * 15;
+
+                colors[i] = 0.0;
+                colors[i + 1] = 0.8 + Math.random() * 0.2;
+                colors[i + 2] = 1.0;
+            }
+
+            geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+            geometry.setAttribute("color", new THREE.BufferAttribute(colors, 3));
+
+            const material = new THREE.PointsMaterial({
+                size: 0.03,
+                vertexColors: true,
+                transparent: true,
+                opacity: 0.6,
+            });
+
+            particles = new THREE.Points(geometry, material);
+            scene.add(particles);
+        }
+
+        function createHolographicScene() {
+            // Create a simple holographic torus
+            const torusGeometry = new THREE.TorusGeometry(1, 0.3, 8, 16);
+            const torusMaterial = new THREE.MeshBasicMaterial({
+                color: 0x00ff88,
+                transparent: true,
+                opacity: 0.3,
+                wireframe: true,
+            });
+
+            const torus = new THREE.Mesh(torusGeometry, torusMaterial);
+            torus.position.set(0, 0, -2);
+            scene.add(torus);
+            sceneObjects.push(torus);
+
+            // Create a grid
+            const gridGeometry = new THREE.PlaneGeometry(8, 8, 16, 16);
+            const gridMaterial = new THREE.MeshBasicMaterial({
+                color: 0x00d4ff,
+                transparent: true,
+                opacity: 0.1,
+                wireframe: true,
+            });
+
+            const grid = new THREE.Mesh(gridGeometry, gridMaterial);
+            grid.rotation.x = -Math.PI / 2;
+            grid.position.y = -2;
+            scene.add(grid);
+            sceneObjects.push(grid);
+        }
+
+        function animate() {
+            animationId = requestAnimationFrame(animate);
+
+            if (particles) {
+                particles.rotation.y += 0.001;
+                particles.rotation.x += 0.0005;
+            }
+
+            sceneObjects.forEach((obj, index) => {
+                if (obj.geometry && obj.geometry.type === 'TorusGeometry') {
+                    obj.rotation.x += 0.005;
+                    obj.rotation.y += 0.01;
+                    obj.position.y = Math.sin(Date.now() * 0.001) * 0.3;
+                }
+            });
+
+            // Subtle camera movement
+            camera.position.x = Math.sin(Date.now() * 0.0003) * 0.3;
+            camera.position.y = Math.cos(Date.now() * 0.0002) * 0.2;
+            camera.lookAt(0, 0, 0);
+
+            renderer.render(scene, camera);
+        }
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        // =============================================================================
+        // COLOR THEME SYSTEM
+        // =============================================================================
+
+        function selectColorTheme(theme) {
+            currentColorTheme = theme;
+            
+            // Remove all theme classes
+            jarvisContainer.className = jarvisContainer.className.replace(/theme-\w+/, '');
+            jarvisContainer.classList.add(`theme-${theme}`);
+            
+            // Update active state
+            document.querySelectorAll('#colorDropdown .selector-option').forEach(option => {
+                option.classList.remove('active');
+            });
+            document.querySelector(`[data-color="${theme}"]`).classList.add('active');
+            
+            colorDropdown.classList.remove('active');
+            showNotification(`Color theme changed to ${theme}`);
+        }
+
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.className = 'demo-notification';
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 2000);
+        }
+
+        // =============================================================================
+        // MOCK AGENT SYSTEM
+        // =============================================================================
+
+        const mockAgentResponses = {
+            visual: [
+                "Interface expanded successfully.",
+                "Visual matrix recalibrated.",
+                "Holographic display optimized.",
+                "UI elements synchronized."
+            ],
+            scheduler: [
+                "Reminder set for 2:30 PM.",
+                "You have 3 events scheduled today.",
+                "Meeting with Sarah moved to 4:00 PM.",
+                "Calendar synchronized."
+            ],
+            weather: [
+                "72°F and sunny in Boston.",
+                "Chance of rain at 40% this afternoon.",
+                "Current temperature: 68°F.",
+                "UV index is moderate."
+            ],
+            system: [
+                "All systems operational.",
+                "Running diagnostics... Complete.",
+                "Network connection stable.",
+                "Power levels optimal."
+            ],
+            assistant: [
+                "How may I assist you today?",
+                "Processing your request...",
+                "Standing by for instructions.",
+                "Task completed successfully."
+            ]
+        };
+
+        function selectMockAgent(input) {
+            const lowercaseInput = input.toLowerCase();
+
+            if (lowercaseInput.includes("expand") || lowercaseInput.includes("interface") || lowercaseInput.includes("ui")) {
+                return "visual";
+            } else if (lowercaseInput.includes("remind") || lowercaseInput.includes("schedule")) {
+                return "scheduler";
+            } else if (lowercaseInput.includes("weather") || lowercaseInput.includes("temperature")) {
+                return "weather";
+            } else if (lowercaseInput.includes("system") || lowercaseInput.includes("status")) {
+                return "system";
+            } else {
+                return "assistant";
+            }
+        }
+
+        function getMockAgentResponse(input) {
+            const agentType = selectMockAgent(input);
+            const responses = mockAgentResponses[agentType];
+            const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+
+            return {
+                system: agentType.toUpperCase(),
+                response: randomResponse,
+                timestamp: new Date().toISOString(),
+            };
+        }
+
+        async function processUserInput(input) {
+            return new Promise((resolve) => {
+                const delay = Math.random() * 1000 + 500;
+                setTimeout(() => {
+                    resolve(getMockAgentResponse(input));
+                }, delay);
+            });
+        }
+
+        // =============================================================================
+        // EVENT HANDLERS
+        // =============================================================================
+
+        async function handleUserInput() {
+            const input = userInput.value.trim();
+            if (!input || isProcessing) return;
+
+            addMessage(input, "user");
+            commandHistory.unshift(input);
+            if (commandHistory.length > 50) commandHistory.pop();
+            historyIndex = -1;
+
+            userInput.value = "";
+            isProcessing = true;
+            jarvisContainer.classList.add("processing");
+            showTypingIndicator();
+
+            try {
+                const response = await processUserInput(input);
+                hideTypingIndicator();
+                addMessage(response.response, "assistant", response.system);
+            } catch (error) {
+                console.error("Error processing input:", error);
+                hideTypingIndicator();
+                addMessage("Unable to process request. Please try again.", "assistant", "ERROR");
+            } finally {
+                isProcessing = false;
+                jarvisContainer.classList.remove("processing");
+            }
+        }
+
+        // =============================================================================
+        // EVENT LISTENERS
+        // =============================================================================
+
+        // Main orb hover events
+        mainOrb.addEventListener('mouseenter', () => {
+            expandInterface();
+        });
+
+        // Container hover events
+        jarvisContainer.addEventListener('mouseenter', () => {
+            cancelCollapse();
+        });
+
+        jarvisContainer.addEventListener('mouseleave', () => {
+            collapseInterface();
+        });
+
+        // Chat input
+        userInput.addEventListener("keydown", (e) => {
+            if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                handleUserInput();
+            } else if (e.key === "ArrowUp") {
+                e.preventDefault();
+                if (historyIndex < commandHistory.length - 1) {
+                    historyIndex++;
+                    userInput.value = commandHistory[historyIndex];
+                }
+            } else if (e.key === "ArrowDown") {
+                e.preventDefault();
+                if (historyIndex > 0) {
+                    historyIndex--;
+                    userInput.value = commandHistory[historyIndex];
+                } else if (historyIndex === 0) {
+                    historyIndex = -1;
+                    userInput.value = "";
+                }
+            }
+        });
+
+        sendBtn.addEventListener("click", handleUserInput);
+
+        // Window controls
+        minimizeBtn.addEventListener("click", () => {
+            console.log("Minimize - Would minimize in Electron app");
+        });
+
+        closeBtn.addEventListener("click", () => {
+            console.log("Close - Would close in Electron app");
+        });
+
+        // Color theme selector
+        colorToggle.addEventListener("click", (e) => {
+            e.stopPropagation();
+            colorDropdown.classList.toggle('active');
+        });
+
+        // Color theme options
+        document.querySelectorAll('#colorDropdown .selector-option').forEach(option => {
+            option.addEventListener('click', (e) => {
+                e.stopPropagation();
+                selectColorTheme(option.dataset.color);
+            });
+        });
+
+        // Close dropdowns when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.selector')) {
+                colorDropdown.classList.remove('active');
+            }
+        });
+
+        // =============================================================================
+        // INITIALIZATION
+        // =============================================================================
+
+        document.addEventListener("DOMContentLoaded", () => {
+            console.log("DOM loaded, initializing JARVIS with compact UI...");
+            
+            // Initialize Three.js
+            initThreeJS();
+
+            // Add welcome message
+            setTimeout(() => {
+                addMessage(
+                    "Compact interface initialized. Hover over the orb to expand.",
+                    "assistant",
+                    "CORE"
+                );
+            }, 1000);
+
+            console.log("🤖 JARVIS Desktop Assistant with compact UI initialized");
+            console.log("✨ Hover over the orb to expand the interface");
+            console.log("🌌 3D background active");
+        });
+
+        // Cleanup on page unload
+        window.addEventListener("beforeunload", () => {
+            if (animationId) {
+                cancelAnimationFrame(animationId);
+            }
+            if (renderer) {
+                renderer.dispose();
+            }
+        });
+    </script>
+</body>
+</html>
