@@ -1,4 +1,5 @@
 const { app, BrowserWindow, globalShortcut, ipcMain } = require("electron");
+// NOTE: Electron main process
 const path = require("path");
 
 let mainWindow;
@@ -20,15 +21,16 @@ function createWindow() {
     skipTaskbar: true, // Don't show in taskbar
     hasShadow: false, // No window shadow
     webPreferences: {
-      nodeIntegration: true,
-      contextIsolation: false,
-      enableRemoteModule: true,
-      webSecurity: false, // Add this line to allow local file loading
+      preload: path.join(__dirname, 'preload.js'),
+      nodeIntegration: false,
+      contextIsolation: true,
+      enableRemoteModule: false,
+      webSecurity: false,
     },
   });
 
   // Load the app
-  mainWindow.loadFile("index.html");
+  mainWindow.loadFile(path.join(__dirname, '..', 'renderer', 'index.html'));
 
   // Position window at top-right corner initially
   const { screen } = require("electron");
@@ -69,7 +71,9 @@ function createWindow() {
 
   // Handle minimize button
   ipcMain.on("minimize-app", () => {
-    mainWindow.hide();
+    if (mainWindow) {
+      mainWindow.minimize();
+    }
   });
 
   // Handle window focus/blur for transparency effects
